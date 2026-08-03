@@ -107,10 +107,10 @@
       document.getElementById('calendarCard'),
       (i) => {
         if(typeof i !== 'string') return `<div style="padding:6px 0; font-size:14px;">${i.title||i}</div>`;
-        const parts = i.split('·').map(s => s.trim());
+        const parts = i.split(' . ').map(s => s.trim());
         const [title, start, cal] = parts;
-        const dot = cal ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${colorForCalendar(cal)};margin-right:6px;"></span>` : '';
-        return `<div style="padding:6px 0; font-size:14px;">${dot}${title||''}${start ? ' <span style="color:var(--muted); font-size:12px;">· '+start+'</span>' : ''}${cal ? ' <span style="color:var(--muted); font-size:11px;">· '+cal+'</span>' : ''}</div>`;
+        const dot = cal ? ` <span style="color:${colorForCalendar(cal)};font-size:15px;">•</span>` : '';
+        return `<div style="padding:6px 0; font-size:14px;">${title||''}${dot}${start ? ' <span style="color:var(--muted); font-size:12px;">· '+start+'</span>' : ''}${cal ? ' <span style="color:var(--muted); font-size:11px;">· '+cal+'</span>' : ''}</div>`;
       },
       'Nog geen agenda-items binnengekomen.',
       'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Agenda actief is.'
