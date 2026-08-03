@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Life App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Italiana&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Master Life App</div>
+  <h1>Home</h1>
+</header>
+
+<main>
+  <h2 class="section-title">Reminders</h2>
+  <div class="card" id="remindersCard">
+    <div class="empty-state">Laden…</div>
+  </div>
+
+  <h2 class="section-title">Agenda</h2>
+  <div class="card" id="calendarCard">
+    <div class="empty-state">Laden…</div>
+  </div>
+
+  <h2 class="section-title">Secties</h2>
+  <div class="tile-grid">
+    <a class="tile" style="--tile-accent:var(--self-care)" href="self-care-dashboard.html">
+      <span class="tile-label">Self Care</span>
+      <span class="tile-sub">Habits, when-did-I-last, period tracker</span>
+    </a>
+    <a class="tile soon" style="--tile-accent:var(--home)" href="home.html">
+      <span class="tile-label">Home</span>
+      <span class="tile-sub">Boodschappen, cleaning, finances, auto</span>
+    </a>
+    <a class="tile soon" style="--tile-accent:var(--home-improvement)" href="home-improvement.html">
+      <span class="tile-label">Home Improvement</span>
+      <span class="tile-sub">Verbouw- en klusprojecten</span>
+    </a>
+    <a class="tile soon" style="--tile-accent:var(--collections)" href="collections.html">
+      <span class="tile-label">Collections</span>
+      <span class="tile-sub">Movies, brain dump, to look up, to buy</span>
+    </a>
+  </div>
+</main>
+
+<script type="module">
+  import { db } from './assets/firebase-config.js';
+  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+
+  async function loadFeed(docId, card, renderItem, emptyLabel, howToLabel){
+    try{
+      const snap = await getDoc(doc(db, 'feeds', docId));
+      if(!snap.exists() || !(snap.data().items||[]).length){
+        card.innerHTML = `<div class="empty-state"><b>${emptyLabel}</b><br>${howToLabel}</div>`;
+        return;
+      }
+      const items = snap.data().items;
+      card.innerHTML = items.slice(0,5).map(renderItem).join('');
+    }catch(e){
+      card.innerHTML = `<div class="empty-state"><b>Nog niet gekoppeld.</b><br>${howToLabel}</div>`;
+    }
+  }
+
+  loadFeed(
+    'reminders',
+    document.getElementById('remindersCard'),
+    (i) => `<div style="padding:6px 0; font-size:14px;">${i.title || i}</div>`,
+    'Nog geen reminders binnengekomen.',
+    'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.'
+  );
+
+  loadFeed(
+    'calendar',
+    document.getElementById('calendarCard'),
+    (i) => `<div style="padding:6px 0; font-size:14px;">${i.title || i}${i.start ? ' <span style=\"color:var(--muted); font-size:12px;\">· '+i.start+'</span>' : ''}</div>`,
+    'Nog geen agenda-items binnengekomen.',
+    'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Agenda actief is.'
+  );
+</script>
+
+</body>
+</html>
