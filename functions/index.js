@@ -17,7 +17,15 @@ exports.feedUpdate = onRequest(async (req, res) => {
 
 const { feed } = req.body || {};
 const rawItems = req.body ? req.body.items : undefined;
-const items = Array.isArray(rawItems) ? rawItems : (rawItems !== undefined ? [rawItems] : undefined);
+
+let items;
+if (Array.isArray(rawItems)) {
+  items = rawItems;
+} else if (typeof rawItems === "string") {
+  items = rawItems.split("\n").map(s => s.trim()).filter(Boolean);
+} else {
+  items = undefined;
+}
 
 
   if (!feed || !Array.isArray(items)) {
