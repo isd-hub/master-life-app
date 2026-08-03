@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Self Care</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Italiana&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum:#F4F3FB;
+    --plum-2:#FFFFFF;
+    --accent:#9B8FC9;
+    --rose:#C9D4EE;
+    --sage:#4C7A5D;
+    --late:#B08BB0;
+    --paper:#726C87;
+    --muted:#9C97B0;
+    --line:#E7E5F5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:linear-gradient(180deg, #F6F4FC 0%, #F0F1FA 45%, #EAECF7 100%);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    font-weight:300;
+    padding-bottom:80px;
+  }
+  header{
+    padding:26px 20px 18px;
+    position:relative;
+    overflow:hidden;
+  }
+  header::before{
+    content:'';
+    position:absolute;
+    top:-60px;
+    right:-40px;
+    width:220px;
+    height:220px;
+    background:radial-gradient(circle, rgba(155,143,201,0.20) 0%, rgba(201,212,238,0.12) 55%, transparent 75%);
+    filter:blur(2px);
+    pointer-events:none;
+    z-index:0;
+  }
+  header .eyebrow, header h1, #nextAction{
+    position:relative;
+    z-index:1;
+  }
+  header .eyebrow{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:11px;
+    letter-spacing:1px;
+    color:var(--accent);
+  }
+  header h1{
+    font-family:'Italiana',serif;
+    font-weight:400;
+    font-size:38px;
+    letter-spacing:1.5px;
+    margin:6px 0 12px;
+    -webkit-text-stroke:0.5px currentColor;
+  }
+  #nextAction{
+    background:rgba(255,255,255,0.45);
+    backdrop-filter:blur(14px) saturate(160%);
+    -webkit-backdrop-filter:blur(14px) saturate(160%);
+    border:1px solid rgba(255,255,255,0.6);
+    border-left:3px solid var(--accent);
+    border-radius:14px;
+    box-shadow:0 2px 10px rgba(155,143,201,0.12);
+    padding:12px 14px;
+    font-size:13px;
+  }
+  #nextAction .label{
+    font-family:'Inter',sans-serif;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--accent);
+    display:block;
+    margin-bottom:4px;
+  }
+  main{max-width:720px; margin:0 auto; padding:24px 18px;}
+  h2.section-title{
+    font-family:'Italiana',serif;
+    font-weight:400;
+    font-size:24px;
+    letter-spacing:0.8px;
+    margin:36px 0 12px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    -webkit-text-stroke:0.4px currentColor;
+  }
+  h2.section-title:first-child{margin-top:0;}
+  h2.section-title .count{
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    color:var(--muted);
+    font-weight:500;
+  }
+  .card{
+    background:rgba(255,255,255,0.45);
+    backdrop-filter:blur(14px) saturate(160%);
+    -webkit-backdrop-filter:blur(14px) saturate(160%);
+    border:1px solid rgba(255,255,255,0.6);
+    border-top:1px solid rgba(255,255,255,0.85);
+    border-radius:20px;
+    box-shadow:0 4px 16px rgba(155,143,201,0.12);
+    padding:14px 16px;
+    margin-bottom:10px;
+  }
+  .item-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+  .item-name{font-weight:400; font-size:15px; flex:1; min-width:140px;}
+  .status-badge{
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    font-weight:700;
+    padding:4px 11px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  .status-ok{background:rgba(76,122,93,0.15); color:#4C7A5D;}
+  .status-soon{background:rgba(212,162,76,0.2); color:#A9711F;}
+  .status-late{background:rgba(176,139,176,0.18); color:#8F6B90;}
+  .status-none{background:rgba(158,147,172,0.15); color:var(--muted);}
+  .date-row{display:flex; align-items:center; gap:10px; margin-top:8px; font-size:12px; color:var(--muted); flex-wrap:wrap;}
+  input[type="date"]{
+    background:var(--plum);
+    border:1px solid var(--line);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    font-size:12px;
+    padding:4px 6px;
+    border-radius:4px;
+  }
+  .interval-tag{font-family:'Inter',sans-serif; font-size:11px; color:var(--muted);}
+  button{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:13px;
+    border:none;
+    border-radius:6px;
+    padding:8px 12px;
+    cursor:pointer;
+  }
+  .btn-ghost{background:transparent; color:var(--accent); border:1px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--accent);}
+  .btn-add{background:none; border:1px dashed var(--line); color:var(--muted); width:100%; padding:10px; margin-top:6px;}
+  .btn-add:hover{color:var(--accent); border-color:var(--accent);}
+  .remove-x{background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer; padding:0 6px;}
+  .inv-group{margin-bottom:16px;}
+  .inv-label{font-size:12px; color:var(--accent); font-weight:700; margin-bottom:6px; font-family:'Inter',sans-serif;}
+  .inv-item{display:flex; align-items:center; gap:10px; padding:6px 0;}
+  .inv-item input[type="checkbox"]{width:18px; height:18px; accent-color:var(--accent);}
+  .inv-item.done .inv-text{color:var(--muted); text-decoration:line-through;}
+  .inv-text{flex:1; font-size:14px;}
+  .new-item-row{display:flex; gap:8px; margin-top:8px;}
+  .new-item-row input{
+    flex:1; background:var(--plum); border:1px solid var(--line); color:var(--paper);
+    padding:8px; border-radius:5px; font-size:13px;
+  }
+  .habit-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:6px;}
+  .habit-day{
+    aspect-ratio:1; border-radius:6px; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Inter',sans-serif; font-size:11px; color:var(--muted);
+    cursor:pointer; background:var(--plum);
+  }
+  .habit-day.done{background:var(--sage); color:#fff; border-color:var(--sage);}
+  .habit-day.today{border-color:var(--accent); border-width:2px;}
+  .habit-row{margin-bottom:16px;}
+  .habit-name{font-size:14px; font-weight:400; margin-bottom:2px;}
+  .habit-sub{font-size:11px; color:var(--muted); font-family:'Inter',sans-serif;}
+  .therapy-note textarea{
+    width:100%; min-height:90px; background:var(--plum); border:1px solid var(--line);
+    color:var(--paper); border-radius:6px; padding:10px; font-family:'Inter',sans-serif;
+    font-size:13px; resize:vertical;
+  }
+  .bridge-note{
+    background:rgba(255,255,255,0.4);
+    backdrop-filter:blur(14px) saturate(160%);
+    -webkit-backdrop-filter:blur(14px) saturate(160%);
+    border:1px dashed rgba(255,255,255,0.7); border-radius:16px;
+    padding:14px 16px; font-size:13px; color:var(--muted); margin-top:24px; line-height:1.5;
+  }
+  .bridge-note b{color:var(--paper);}
+  .save-flash{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    background:var(--sage); color:#fff; font-size:12px; font-weight:600;
+    padding:8px 16px; border-radius:20px; opacity:0; transition:opacity 0.3s; pointer-events:none;
+  }
+  .save-flash.show{opacity:1;}
+  .loading{text-align:center; color:var(--muted); padding:40px; font-family:'Inter',sans-serif; text-transform:uppercase; letter-spacing:1px; font-size:13px;}
+  .empty-hint{font-size:12px; color:var(--muted); font-style:italic; padding:6px 0;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Master-app · onderdeel 2</div>
+  <h1>Self Care</h1>
+  <div id="nextAction"></div>
+</header>
+
+<main id="app">
+  <div class="loading">Laden…</div>
+</main>
+
+<div class="save-flash" id="saveFlash">Opgeslagen</div>
+
+<script>
+const STORAGE_KEY = 'self-care-dashboard-state';
+
+const DEFAULT_STATE = {
+  tracker: [
+    { id:'gezicht', name:'Gezichtsverzorging', intervalDays:7, lastDone:null, note:'' },
+    { id:'nagels', name:'Nagels doen', intervalDays:14, lastDone:null, note:'' },
+    { id:'hardlopen', name:'Hardlopen', intervalDays:7, lastDone:null, note:'' },
+    { id:'yoga', name:'Yoga', intervalDays:7, lastDone:null, note:'' },
+  ],
+  supplies: {
+    'Make-up': [],
+    'Verzorging': [],
+    'Overig': []
+  },
+  reminders: [
+    { id:'vitd', name:'Vitamine D', intervalDays:1, lastDone:null, note:'Voorbeeld — pas aan of verwijder' },
+  ],
+  habits: [
+    { id:'beweging', name:'Beweging (hardlopen/yoga)', sub:'fysiek', days:{} },
+    { id:'buiten', name:'Even buiten geweest', sub:'mentaal/emotioneel', days:{} },
+    { id:'moment', name:'Moment voor mezelf', sub:'mentaal/emotioneel', days:{} },
+  ],
+  therapyNote: ''
+};
+
+let state = null;
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function daysBetween(a,b){ return Math.round((new Date(b+'T00:00:00') - new Date(a+'T00:00:00')) / 86400000); }
+function daysSince(dateStr){ if(!dateStr) return null; return daysBetween(dateStr, todayStr()); }
+
+async function loadState(){
+  try{
+    const result = await window.storage.get(STORAGE_KEY, false);
+    state = result ? JSON.parse(result.value) : structuredClone(DEFAULT_STATE);
+  }catch(e){
+    state = structuredClone(DEFAULT_STATE);
+  }
+  render();
+}
+
+async function saveState(){
+  try{
+    await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+    flashSaved();
+  }catch(e){
+    // Eén keer opnieuw proberen bij een tijdelijke hik in de opslag-service
+    try{
+      await new Promise(r => setTimeout(r, 400));
+      await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+      flashSaved();
+    }catch(e2){
+      console.error('Opslaan mislukt (na retry)', e2);
+    }
+  }
+}
+
+function flashSaved(){
+  const el = document.getElementById('saveFlash');
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 1200);
+}
+
+function getStatus(item){
+  if(!item.lastDone) return {label:'Onbekend', cls:'status-none'};
+  const since = daysSince(item.lastDone);
+  const remaining = item.intervalDays - since;
+  if(remaining < 0) return {label:`Te laat · ${Math.abs(remaining)}d`, cls:'status-late'};
+  if(remaining <= 1) return {label:`Vandaag/morgen`, cls:'status-soon'};
+  return {label:`OK · nog ${remaining}d`, cls:'status-ok'};
+}
+
+function overdueScore(item){
+  if(!item.lastDone) return 9999;
+  const since = daysSince(item.lastDone);
+  return since - item.intervalDays;
+}
+
+function renderNextAction(){
+  const all = [...state.tracker, ...state.reminders];
+  if(all.length === 0){ document.getElementById('nextAction').innerHTML = ''; return; }
+  const sorted = [...all].sort((a,b)=>overdueScore(b)-overdueScore(a));
+  const top = sorted[0];
+  const status = getStatus(top);
+  document.getElementById('nextAction').innerHTML = `
+    <span class="label">Als je er één zou pakken</span>
+    ${top.name} — <span class="status-badge ${status.cls}" style="margin-left:4px;">${status.label}</span>`;
+}
+
+function render(){
+  renderNextAction();
+  const app = document.getElementById('app');
+  let html = '';
+
+  // Wanneer heb ik voor het laatst...
+  html += `<h2 class="section-title">Wanneer heb ik voor het laatst… <span class="count">${state.tracker.length} items</span></h2>`;
+  state.tracker.forEach(item => {
+    const status = getStatus(item);
+    const since = item.lastDone ? daysSince(item.lastDone) : null;
+    html += `
+      <div class="card">
+        <div class="item-row">
+          <div class="item-name">${item.name}</div>
+          <span class="status-badge ${status.cls}">${status.label}</span>
+          <button class="remove-x" onclick="removeTracker('${item.id}')">×</button>
+        </div>
+        <div class="date-row">
+          <span class="interval-tag">interval: ${item.intervalDays}d</span>
+          <span>·</span>
+          <span>laatst gedaan:</span>
+          <input type="date" value="${item.lastDone||''}" onchange="updateTrackerDate('${item.id}', this.value)">
+          ${since!==null ? `<span>(${since}d geleden)</span>` : ''}
+        </div>
+      </div>`;
+  });
+  html += `<button class="btn-add" onclick="addTrackerItem()">+ item toevoegen</button>`;
+
+  // Voorraad
+  html += `<h2 class="section-title">Voorraad</h2><div class="card">`;
+  Object.keys(state.supplies).forEach(group => {
+    html += `<div class="inv-group"><div class="inv-label">${group}</div>`;
+    if(state.supplies[group].length === 0){
+      html += `<div class="empty-hint">Nog leeg — voeg toe wat je bijhoudt.</div>`;
+    }
+    state.supplies[group].forEach((it, idx) => {
+      html += `
+        <div class="inv-item ${it.done?'done':''}">
+          <input type="checkbox" ${it.done?'checked':''} onchange="toggleSupply('${group}', ${idx})">
+          <div class="inv-text">${it.text}</div>
+          <button class="remove-x" onclick="removeSupply('${group}', ${idx})">×</button>
+        </div>`;
+    });
+    html += `
+      <div class="new-item-row">
+        <input placeholder="Nieuw item…" id="new-supply-${group}" onkeydown="if(event.key==='Enter'){addSupply('${group}')}">
+        <button class="btn-ghost" onclick="addSupply('${group}')">+</button>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // Herinneringen (vitamines/medicatie)
+  html += `<h2 class="section-title">Herinneringen <span class="count">${state.reminders.length} items</span></h2>`;
+  state.reminders.forEach(item => {
+    const status = getStatus(item);
+    const since = item.lastDone ? daysSince(item.lastDone) : null;
+    html += `
+      <div class="card">
+        <div class="item-row">
+          <div class="item-name">${item.name}</div>
+          <span class="status-badge ${status.cls}">${status.label}</span>
+          <button class="remove-x" onclick="removeReminder('${item.id}')">×</button>
+        </div>
+        ${item.note ? `<div class="empty-hint">${item.note}</div>` : ''}
+        <div class="date-row">
+          <span class="interval-tag">interval: ${item.intervalDays}d</span>
+          <span>·</span>
+          <span>laatst gedaan:</span>
+          <input type="date" value="${item.lastDone||''}" onchange="updateReminderDate('${item.id}', this.value)">
+          ${since!==null ? `<span>(${since}d geleden)</span>` : ''}
+        </div>
+      </div>`;
+  });
+  html += `<button class="btn-add" onclick="addReminder()">+ herinnering toevoegen</button>`;
+
+  // Habit tracker
+  html += `<h2 class="section-title">Habit tracker <span class="count">deze week</span></h2><div class="card">`;
+  const last7 = [];
+  const now = new Date();
+  const dayNum = now.getDay(); // 0=zo,1=ma,...6=za
+  const diffToMonday = dayNum === 0 ? -6 : 1 - dayNum;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + diffToMonday);
+  for(let i=0;i<7;i++){
+    const d = new Date(monday);
+    d.setDate(monday.getDate()+i);
+    last7.push(d.toISOString().slice(0,10));
+  }
+  state.habits.forEach(habit => {
+    html += `
+      <div class="habit-row">
+        <div class="habit-name">${habit.name}</div>
+        <div class="habit-sub">${habit.sub}</div>
+        <div class="habit-grid">
+          ${last7.map(d => {
+            const done = !!habit.days[d];
+            const isToday = d === todayStr();
+            const dayLabel = new Date(d+'T00:00:00').toLocaleDateString('nl-NL',{weekday:'narrow'});
+            return `<div class="habit-day ${done?'done':''} ${isToday?'today':''}" onclick="toggleHabit('${habit.id}','${d}')">${dayLabel}</div>`;
+          }).join('')}
+        </div>
+      </div>`;
+  });
+  html += `</div>`;
+
+  // Therapie
+  html += `<h2 class="section-title">Therapie</h2>
+    <div class="card therapy-note">
+      <div class="empty-hint" style="margin-bottom:8px;">Financieel/administratieve kant volgt nog — zet hier vast losse notities neer tot we dat onderdeel uitwerken.</div>
+      <textarea placeholder="Notities…" onchange="updateTherapyNote(this.value)">${state.therapyNote||''}</textarea>
+    </div>`;
+
+  html += `
+    <div class="bridge-note">
+      <b>Agenda-integratie:</b> zeg in de chat welk zelfzorg-punt je wilt inplannen (bv. "zet yoga voor morgenavond in mijn agenda") en ik regel het — dit dashboard is de bron van waarheid voor wát en wannéér.
+    </div>`;
+
+  app.innerHTML = html;
+}
+
+// Tracker
+function updateTrackerDate(id, value){
+  const item = state.tracker.find(i => i.id === id);
+  if(item){ item.lastDone = value; saveState(); render(); }
+}
+function addTrackerItem(){
+  const name = prompt('Naam van het zelfzorg-punt:');
+  if(!name) return;
+  const intervalDays = parseInt(prompt('Interval in dagen (bv. 7):', '7')) || 7;
+  state.tracker.push({ id:'custom-'+Date.now(), name, intervalDays, lastDone:null, note:'' });
+  saveState(); render();
+}
+function removeTracker(id){
+  state.tracker = state.tracker.filter(i => i.id !== id);
+  saveState(); render();
+}
+
+// Supplies
+function toggleSupply(group, idx){
+  state.supplies[group][idx].done = !state.supplies[group][idx].done;
+  saveState(); render();
+}
+function removeSupply(group, idx){
+  state.supplies[group].splice(idx,1);
+  saveState(); render();
+}
+function addSupply(group){
+  const input = document.getElementById('new-supply-'+group);
+  const text = input.value.trim();
+  if(!text) return;
+  state.supplies[group].push({text, done:false});
+  input.value='';
+  saveState(); render();
+}
+
+// Reminders
+function updateReminderDate(id, value){
+  const item = state.reminders.find(i => i.id === id);
+  if(item){ item.lastDone = value; saveState(); render(); }
+}
+function addReminder(){
+  const name = prompt('Naam (bv. vitamine, medicatie):');
+  if(!name) return;
+  const intervalDays = parseInt(prompt('Interval in dagen (bv. 1 voor dagelijks):', '1')) || 1;
+  state.reminders.push({ id:'custom-'+Date.now(), name, intervalDays, lastDone:null, note:'' });
+  saveState(); render();
+}
+function removeReminder(id){
+  state.reminders = state.reminders.filter(i => i.id !== id);
+  saveState(); render();
+}
+
+// Habits
+function toggleHabit(id, dateStr){
+  const habit = state.habits.find(h => h.id === id);
+  if(habit){
+    habit.days[dateStr] = !habit.days[dateStr];
+    saveState(); render();
+  }
+}
+
+// Therapy
+function updateTherapyNote(value){
+  state.therapyNote = value;
+  saveState();
+}
+
+loadState();
+</script>
+</body>
+</html>
