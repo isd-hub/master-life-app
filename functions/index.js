@@ -27,6 +27,10 @@ if (Array.isArray(rawItems)) {
   items = undefined;
 }
 
+if (items) {
+  items = [...new Set(items)];
+}
+
 
   if (!feed || !Array.isArray(items)) {
     res.status(400).send("Body needs a 'feed' name and an 'items' array");
