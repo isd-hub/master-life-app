@@ -1,0 +1,144 @@
+/* Shared design tokens for master-life-app.
+   Category color tokens live here so every page (and the homepage tiles)
+   reference the same values instead of redefining them. */
+
+:root{
+  --ink:#4A4560;
+  --muted:#8B87A0;
+  --line:#E7E5F5;
+
+  --self-care:#9B8FC9;
+  --home:#C9A227;
+  --home-improvement:#4C7A5D;
+  --collections:#B08BB0;
+  --calendar:#7B93C9;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  background:linear-gradient(180deg, #FBFAFD 0%, #F5F4FB 45%, #F0EEF8 100%);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  font-weight:300;
+  padding-bottom:80px;
+}
+
+header{
+  padding:30px 20px 20px;
+  position:relative;
+  overflow:hidden;
+}
+header::before{
+  content:'';
+  position:absolute;
+  top:-70px;
+  right:-50px;
+  width:240px;
+  height:240px;
+  background:radial-gradient(circle, rgba(155,143,201,0.16) 0%, rgba(201,212,238,0.10) 55%, transparent 75%);
+  filter:blur(2px);
+  pointer-events:none;
+}
+header .eyebrow, header h1{
+  position:relative;
+  z-index:1;
+}
+header .eyebrow{
+  font-weight:600;
+  font-size:11px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--self-care);
+}
+header h1{
+  font-family:'Italiana',serif;
+  font-weight:400;
+  font-size:38px;
+  letter-spacing:1.5px;
+  margin:6px 0 0;
+  -webkit-text-stroke:0.5px currentColor;
+}
+
+main{max-width:720px; margin:0 auto; padding:24px 18px;}
+
+h2.section-title{
+  font-family:'Italiana',serif;
+  font-weight:400;
+  font-size:22px;
+  letter-spacing:0.8px;
+  margin:32px 0 12px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+  -webkit-text-stroke:0.4px currentColor;
+}
+h2.section-title:first-child{margin-top:0;}
+
+.card{
+  background:rgba(255,255,255,0.45);
+  backdrop-filter:blur(14px) saturate(160%);
+  -webkit-backdrop-filter:blur(14px) saturate(160%);
+  border:1px solid rgba(255,255,255,0.6);
+  border-top:1px solid rgba(255,255,255,0.85);
+  border-radius:20px;
+  box-shadow:0 4px 16px rgba(155,143,201,0.10);
+  padding:14px 16px;
+  margin-bottom:10px;
+}
+
+.empty-state{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.5;
+}
+.empty-state b{color:var(--ink);}
+
+/* Section tile grid on the homepage */
+.tile-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.tile{
+  display:block;
+  text-decoration:none;
+  color:var(--ink);
+  background:rgba(255,255,255,0.45);
+  backdrop-filter:blur(14px) saturate(160%);
+  -webkit-backdrop-filter:blur(14px) saturate(160%);
+  border:1px solid rgba(255,255,255,0.6);
+  border-left:3px solid var(--tile-accent, var(--self-care));
+  border-radius:18px;
+  box-shadow:0 4px 16px rgba(155,143,201,0.10);
+  padding:16px;
+  transition:transform 0.15s ease;
+}
+.tile:active{transform:scale(0.98);}
+.tile .tile-label{
+  font-family:'Italiana',serif;
+  font-size:19px;
+  letter-spacing:0.4px;
+  display:block;
+  margin-bottom:4px;
+}
+.tile .tile-sub{
+  font-size:12px;
+  color:var(--muted);
+  display:block;
+}
+.tile.soon{opacity:0.7;}
+.tile.soon .tile-sub::after{content:' · binnenkort';}
+
+.placeholder-page header .eyebrow{color:var(--page-accent, var(--self-care));}
+.placeholder-card{
+  border-left:3px solid var(--page-accent, var(--self-care));
+}
+
+a.back-link{
+  font-size:12px;
+  color:var(--muted);
+  text-decoration:none;
+  display:inline-block;
+  margin-bottom:8px;
+}
