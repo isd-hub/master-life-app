@@ -48,38 +48,58 @@
 </main>
 
 <script type="module">
-  import { db } from './assets/firebase-config.js';
-  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
-
-  async function loadFeed(docId, card, renderItem, emptyLabel, howToLabel){
-    try{
-      const snap = await getDoc(doc(db, 'feeds', docId));
-      if(!snap.exists() || !(snap.data().items||[]).length){
-        card.innerHTML = `<div class="empty-state"><b>${emptyLabel}</b><br>${howToLabel}</div>`;
-        return;
-      }
-      const items = snap.data().items;
-      card.innerHTML = items.slice(0,5).map(renderItem).join('');
-    }catch(e){
-      card.innerHTML = `<div class="empty-state"><b>Nog niet gekoppeld.</b><br>${howToLabel}</div>`;
-    }
+  function showFatalError(where, err){
+    const msg = `<div class="empty-state" style="color:#B5502E;"><b>Fout in ${where}:</b><br>${(err && err.message) ? err.message : String(err)}</div>`;
+    const r = document.getElementById('remindersCard');
+    const c = document.getElementById('calendarCard');
+    if(r) r.innerHTML = msg;
+    if(c) c.innerHTML = msg;
   }
 
-  loadFeed(
-    'reminders',
-    document.getElementById('remindersCard'),
-    (i) => `<div style="padding:6px 0; font-size:14px;">${i.title || i}</div>`,
-    'Nog geen reminders binnengekomen.',
-    'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.'
-  );
+  window.addEventListener('error', (e) => showFatalError('script', e.error || e.message));
 
-  loadFeed(
-    'calendar',
-    document.getElementById('calendarCard'),
-    (i) => `<div style="padding:6px 0; font-size:14px;">${i.title || i}${i.start ? ' <span style=\"color:var(--muted); font-size:12px;\">· '+i.start+'</span>' : ''}</div>`,
-    'Nog geen agenda-items binnengekomen.',
-    'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Agenda actief is.'
-  );
+  (async () => {
+    let db, doc, getDoc;
+    try{
+      const cfg = await import('./assets/firebase-config.js');
+      db = cfg.db;
+      const fs = await import("https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js");
+      doc = fs.doc; getDoc = fs.getDoc;
+    }catch(e){
+      showFatalError('het laden van Firebase', e);
+      return;
+    }
+
+    async function loadFeed(docId, card, renderItem, emptyLabel, howToLabel){
+      try{
+        const snap = await getDoc(doc(db, 'feeds', docId));
+        if(!snap.exists() || !(snap.data().items||[]).length){
+          card.innerHTML = `<div class="empty-state"><b>${emptyLabel}</b><br>${howToLabel}</div>`;
+          return;
+        }
+        const items = snap.data().items;
+        card.innerHTML = items.slice(0,5).map(renderItem).join('');
+      }catch(e){
+        card.innerHTML = `<div class="empty-state" style="color:#B5502E;"><b>Fout bij ophalen:</b><br>${e.message}</div>`;
+      }
+    }
+
+    loadFeed(
+      'reminders',
+      document.getElementById('remindersCard'),
+      (i) => `<div style="padding:6px 0; font-size:14px;">${i.title || i}</div>`,
+      'Nog geen reminders binnengekomen.',
+      'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.'
+    );
+
+    loadFeed(
+      'calendar',
+      document.getElementById('calendarCard'),
+      (i) => `<div style="padding:6px 0; font-size:14px;">${i.title || i}${i.start ? ' <span style=\"color:var(--muted); font-size:12px;\">· '+i.start+'</span>' : ''}</div>`,
+      'Nog geen agenda-items binnengekomen.',
+      'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Agenda actief is.'
+    );
+  })();
 </script>
 
 </body>
