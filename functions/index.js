@@ -7,30 +7,38 @@ initializeApp();
 const db = getFirestore();
 
 exports.feedUpdate = onRequest(async (req, res) => {
-  logger.info("Headers:", req.headers);
   logger.info("Body:", req.body);
-  logger.info("Raw body type:", typeof req.body);
+
   if (req.method !== "POST") {
     res.status(405).send("Only POST is supported");
     return;
   }
 
-const { feed } = req.body || {};
-const rawItems = req.body ? req.body.items : undefined;
+  const { feed } = req.body || {};
+  const rawItems = req.body ? req.body.items : undefined;
 
-let items;
-if (Array.isArray(rawItems)) {
-  items = rawItems;
-} else if (typeof rawItems === "string") {
-  items = rawItems.split("\n").map(s => s.trim()).filter(Boolean);
-} else {
-  items = undefined;
-}
+  let items;
+  if (Array.isArray(rawItems)) {
+    items = rawItems;
+  } else if (typeof rawItems === "string") {
+    items = rawItems.split("\n").map(s => s.trim()).filter(Boolean);
+  } else {
+    items = undefined;
+  }
 
-if (items) {
-  items = [...new Set(items)];
-}
-
+  if (items) {
+    const seen = new Set();
+    items = items.filter(item => {
+      let key = item;
+      if (typeof item === "string") {
+        const lastDot = item.lastIndexOf(".");
+        key = lastDot !== -1 ? item.slice(0, lastDot).trim() : item;
+      }
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
 
   if (!feed || !Array.isArray(items)) {
     res.status(400).send("Body needs a 'feed' name and an 'items' array");
