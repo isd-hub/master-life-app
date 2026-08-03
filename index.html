@@ -92,14 +92,10 @@
       'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.'
     );
 
-    const calendarColors = ['#9B8FC9','#7B93C9','#C9A227','#4C7A5D','#B08BB0','#C1502E'];
-    const calendarColorMap = {};
+    const calendarColorMap = { 'Privé': '#C77B93', 'Pat & Ira': '#4C7A5D' };
+    const fallbackColor = '#9B8FC9';
     function colorForCalendar(name){
-      if(!calendarColorMap[name]){
-        const used = Object.keys(calendarColorMap).length;
-        calendarColorMap[name] = calendarColors[used % calendarColors.length];
-      }
-      return calendarColorMap[name];
+      return calendarColorMap[name] || fallbackColor;
     }
 
     loadFeed(
@@ -113,7 +109,7 @@
           titleAndDate = i.slice(0, lastDot).trim();
           cal = i.slice(lastDot + 1).trim();
         }
-        const dot = cal ? ` <span style="color:${colorForCalendar(cal)};font-size:15px;">•</span>` : '';
+        const dot = cal ? ` <span style="color:${colorForCalendar(cal)};font-size:22px;">•</span>` : '';
         return `<div style="padding:6px 0; font-size:14px;">${titleAndDate}${dot}</div>`;
       },
       'Nog geen agenda-items binnengekomen.',
