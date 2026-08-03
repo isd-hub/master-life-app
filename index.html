@@ -6,7 +6,7 @@
 <title>Master Life App</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./assets/style.css">
+<link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
@@ -107,7 +107,7 @@
       document.getElementById('calendarCard'),
       (i) => {
         if(typeof i !== 'string') return `<div style="padding:6px 0; font-size:14px;">${i.title||i}</div>`;
-        const parts = i.split('|').map(s => s.trim());
+        const parts = i.split('·').map(s => s.trim());
         const [title, start, cal] = parts;
         const dot = cal ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${colorForCalendar(cal)};margin-right:6px;"></span>` : '';
         return `<div style="padding:6px 0; font-size:14px;">${dot}${title||''}${start ? ' <span style="color:var(--muted); font-size:12px;">· '+start+'</span>' : ''}${cal ? ' <span style="color:var(--muted); font-size:11px;">· '+cal+'</span>' : ''}</div>`;
