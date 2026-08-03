@@ -61,7 +61,7 @@
   (async () => {
     let db, doc, getDoc;
     try{
-      const cfg = await import('./firebase-config.js');
+      const cfg = await import('./assets/firebase-config.js');
       db = cfg.db;
       const fs = await import("https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js");
       doc = fs.doc; getDoc = fs.getDoc;
