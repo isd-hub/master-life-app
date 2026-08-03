@@ -6,7 +6,7 @@
 <title>Master Life App</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -61,7 +61,7 @@
   (async () => {
     let db, doc, getDoc;
     try{
-      const cfg = await import('./assets/firebase-config.js');
+      const cfg = await import('./firebase-config.js');
       db = cfg.db;
       const fs = await import("https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js");
       doc = fs.doc; getDoc = fs.getDoc;
@@ -92,10 +92,26 @@
       'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.'
     );
 
+    const calendarColors = ['#9B8FC9','#7B93C9','#C9A227','#4C7A5D','#B08BB0','#C1502E'];
+    const calendarColorMap = {};
+    function colorForCalendar(name){
+      if(!calendarColorMap[name]){
+        const used = Object.keys(calendarColorMap).length;
+        calendarColorMap[name] = calendarColors[used % calendarColors.length];
+      }
+      return calendarColorMap[name];
+    }
+
     loadFeed(
       'calendar',
       document.getElementById('calendarCard'),
-      (i) => `<div style="padding:6px 0; font-size:14px;">${i.title || i}${i.start ? ' <span style=\"color:var(--muted); font-size:12px;\">· '+i.start+'</span>' : ''}</div>`,
+      (i) => {
+        if(typeof i !== 'string') return `<div style="padding:6px 0; font-size:14px;">${i.title||i}</div>`;
+        const parts = i.split('|').map(s => s.trim());
+        const [title, start, cal] = parts;
+        const dot = cal ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${colorForCalendar(cal)};margin-right:6px;"></span>` : '';
+        return `<div style="padding:6px 0; font-size:14px;">${dot}${title||''}${start ? ' <span style="color:var(--muted); font-size:12px;">· '+start+'</span>' : ''}${cal ? ' <span style="color:var(--muted); font-size:11px;">· '+cal+'</span>' : ''}</div>`;
+      },
       'Nog geen agenda-items binnengekomen.',
       'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Agenda actief is.'
     );
