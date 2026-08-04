@@ -136,4 +136,30 @@ exports.updateActionStatus = onRequest(async (req, res) => {
     res.status(500).send("Error: " + err.message);
   }
 });
+exports.addAction = onRequest(async (req, res) => {
+  logger.info("Body:", req.body);
+
+  if (req.method !== "POST") {
+    res.status(405).send("Only POST is supported");
+    return;
+  }
+
+  const { collection: collectionName, ...data } = req.body || {};
+
+  if (!collectionName || Object.keys(data).length === 0) {
+    res.status(400).send("Body needs a 'collection' name plus at least one data field");
+    return;
+  }
+
+  try {
+    const docRef = await db.collection(collectionName).add({
+      ...data,
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    });
+    res.status(200).json({ id: docRef.id });
+  } catch (err) {
+    res.status(500).send("Error: " + err.message);
+  }
+});
 
