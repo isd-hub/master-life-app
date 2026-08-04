@@ -55,3 +55,32 @@ exports.feedUpdate = onRequest(async (req, res) => {
     res.status(500).send("Error: " + err.message);
   }
 });
+exports.getFeed = onRequest(async (req, res) => {
+  logger.info("Query:", req.query);
+
+  if (req.method !== "GET") {
+    res.status(405).send("Only GET is supported");
+    return;
+  }
+
+  const feed = req.query.feed;
+
+  if (!feed) {
+    res.status(400).send("Query needs a 'feed' name, e.g. ?feed=period");
+    return;
+  }
+
+  try {
+    const doc = await db.collection("feeds").doc(feed).get();
+
+    if (!doc.exists) {
+      res.status(404).send("No feed found with that name");
+      return;
+    }
+
+    res.status(200).json(doc.data());
+  } catch (err) {
+    res.status(500).send("Error: " + err.message);
+  }
+});
+
