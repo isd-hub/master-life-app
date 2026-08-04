@@ -83,4 +83,57 @@ exports.getFeed = onRequest(async (req, res) => {
     res.status(500).send("Error: " + err.message);
   }
 });
+exports.getPendingActions = onRequest(async (req, res) => {
+  logger.info("Query:", req.query);
+
+  if (req.method !== "GET") {
+    res.status(405).send("Only GET is supported");
+    return;
+  }
+
+  const collectionName = req.query.collection;
+
+  if (!collectionName) {
+    res.status(400).send("Query needs a 'collection' name, e.g. ?collection=reminderActions");
+    return;
+  }
+
+  try {
+    const snapshot = await db.collection(collectionName)
+      .where("status", "==", "pending")
+      .get();
+
+    const actions = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    res.status(200).json({ actions });
+  } catch (err) {
+    res.status(500).send("Error: " + err.message);
+  }
+});
+
+exports.updateActionStatus = onRequest(async (req, res) => {
+  logger.info("Body:", req.body);
+
+  if (req.method !== "POST") {
+    res.status(405).send("Only POST is supported");
+    return;
+  }
+
+  const { collection: collectionName, id, status } = req.body || {};
+
+  if (!collectionName || !id || !status) {
+    res.status(400).send("Body needs 'collection', 'id', and 'status'");
+    return;
+  }
+
+  try {
+    await db.collection(collectionName).doc(id).update({ status });
+    res.status(200).send("OK");
+  } catch (err) {
+    res.status(500).send("Error: " + err.message);
+  }
+});
 
