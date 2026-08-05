@@ -110,7 +110,8 @@ loadFeed(
     const l = (i.listName||'').replace(/"/g,'&quot;');
     const d = (i.dueDate||'').replace(/"/g,'&quot;');
     return `<div style="padding:6px 0; font-size:14px; display:flex; align-items:center; gap:8px;">
-      <input type="checkbox" onclick="completeReminder('${t}','${l}','${d}', this)">
+      <input type="checkbox" style="accent-color: var(--home, #6b5b95);" onclick="completeReminder('${t}','${l}','${d}', this)">
+
       <span>${i.title}</span>
     </div>`;
   },
