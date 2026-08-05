@@ -84,13 +84,39 @@
       }
     }
 
-    loadFeed(
-      'reminders',
-      document.getElementById('remindersCard'),
-      (i) => `<div style="padding:6px 0; font-size:14px;">${i.title || i}</div>`,
-      'Nog geen reminders binnengekomen.',
-      'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.'
-    );
+   window.completeReminder = async function(title, listName, dueDate, checkboxEl){
+  checkboxEl.disabled = true;
+  try{
+    await fetch('https://addaction-mvo6meffaq-uc.a.run.app', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ collection: 'reminderActions', type: 'complete', title, listName, dueDate })
+    });
+    checkboxEl.parentElement.style.opacity = '0.4';
+  }catch(e){
+    checkboxEl.disabled = false;
+    alert('Kon niet afvinken: ' + e.message);
+  }
+};
+
+loadFeed(
+  'reminders',
+  document.getElementById('remindersCard'),
+  (i) => {
+    if(typeof i === 'string'){
+      return `<div style="padding:6px 0; font-size:14px;">${i}</div>`;
+    }
+    const t = (i.title||'').replace(/"/g,'&quot;');
+    const l = (i.listName||'').replace(/"/g,'&quot;');
+    const d = (i.dueDate||'').replace(/"/g,'&quot;');
+    return `<div style="padding:6px 0; font-size:14px; display:flex; align-items:center; gap:8px;">
+      <input type="checkbox" onclick="completeReminder('${t}','${l}','${d}', this)">
+      <span>${i.title}</span>
+    </div>`;
+  },
+  'Nog geen reminders binnengekomen.',
+  'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.'
+);
 
     const calendarColorMap = { 'Privé': '#C77B93', 'Pat & Ira': '#4C7A5D' };
     const fallbackColor = '#9B8FC9';
