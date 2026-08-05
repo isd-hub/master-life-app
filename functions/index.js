@@ -26,6 +26,23 @@ exports.feedUpdate = onRequest(async (req, res) => {
     items = undefined;
   }
 
+    if (Array.isArray(items)) {
+    items = items.map(item => {
+      if (typeof item === "string") {
+        const trimmed = item.trim();
+        if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+          try {
+            return JSON.parse(trimmed);
+          } catch (e) {
+            return item;
+          }
+        }
+      }
+      return item;
+    });
+  }
+
+
   if (items) {
     const seen = new Set();
     items = items.filter(item => {
