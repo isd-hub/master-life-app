@@ -170,7 +170,7 @@ exports.addAction = onRequest(async (req, res) => {
     return;
   }
 
-  const { collection: collectionName, ...data } = req.body || {};
+    const { collection: collectionName, key, ...data } = req.body || {};
 
   if (!collectionName || Object.keys(data).length === 0) {
     res.status(400).send("Body needs a 'collection' name plus at least one data field");
@@ -178,12 +178,23 @@ exports.addAction = onRequest(async (req, res) => {
   }
 
   try {
-    const docRef = await db.collection(collectionName).add({
-      ...data,
-      status: "pending",
-      createdAt: new Date().toISOString(),
-    });
-    res.status(200).json({ id: docRef.id });
+    let id;
+    if (key) {
+      await db.collection(collectionName).doc(key).set({
+        ...data,
+        status: "pending",
+        createdAt: new Date().toISOString(),
+      });
+      id = key;
+    } else {
+      const docRef = await db.collection(collectionName).add({
+        ...data,
+        status: "pending",
+        createdAt: new Date().toISOString(),
+      });
+      id = docRef.id;
+    }
+    res.status(200).json({ id });
   } catch (err) {
     res.status(500).send("Error: " + err.message);
   }

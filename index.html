@@ -123,10 +123,10 @@ window.toggleReminder = async function(title, listName, dueDate, checkboxEl){
 
   checkboxEl.disabled = true;
   try{
-    await fetch('https://addaction-mvo6meffaq-uc.a.run.app', {
+        await fetch('https://addaction-mvo6meffaq-uc.a.run.app', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ collection: 'reminderActions', type: actionType, title, listName, dueDate })
+      body: JSON.stringify({ collection: 'reminderActions', key, type: actionType, title, listName, dueDate })
     });
     setLocalReminderState(key, goingToComplete);
     checkboxEl.parentElement.style.opacity = goingToComplete ? '0.4' : '1';
