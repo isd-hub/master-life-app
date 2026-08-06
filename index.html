@@ -134,21 +134,35 @@
 
     let remindersItemsCache = [];
 
+    function escapeHtml(value){
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function jsString(value){
+      return JSON.stringify(value === undefined || value === null ? '' : String(value));
+    }
+
     function renderReminderItem(i){
       if(typeof i === 'string'){
-        return `<div style="padding:6px 0; font-size:14px;">${i}</div>`;
+        return `<div style="padding:6px 0; font-size:14px;">${escapeHtml(i)}</div>`;
       }
-      const t = (i.title||'').replace(/"/g,'&quot;');
-      const l = (i.listName||'').replace(/"/g,'&quot;');
-      const d = (i.dueDate||'').replace(/"/g,'&quot;');
+      const t = jsString(i.title || '');
+      const l = jsString(i.listName || '');
+      const d = jsString(i.dueDate || '');
+      const titleText = escapeHtml(i.title || '');
 
       const key = reminderKey(i.title, i.listName, i.dueDate);
       const localState = getLocalReminderState();
       const isDone = key in localState ? localState[key] : !!i.isCompleted;
 
       return `<div style="padding:6px 0; font-size:14px; display:flex; align-items:center; gap:8px; opacity:${isDone ? '0.4' : '1'};">
-        <input type="checkbox" style="accent-color: #6b5b95;" ${isDone ? 'checked' : ''} onclick="toggleReminder('${t}','${l}','${d}', this)">
-        <span>${i.title}</span>
+        <input type="checkbox" style="accent-color: #6b5b95;" ${isDone ? 'checked' : ''} onclick="toggleReminder(${t}, ${l}, ${d}, this)">
+        <span>${titleText}</span>
       </div>`;
     }
 

@@ -246,10 +246,41 @@ function todayStr(){ return new Date().toISOString().slice(0,10); }
 function daysBetween(a,b){ return Math.round((new Date(b+'T00:00:00') - new Date(a+'T00:00:00')) / 86400000); }
 function daysSince(dateStr){ if(!dateStr) return null; return daysBetween(dateStr, todayStr()); }
 
+function supportsStorageApi(){
+  return typeof window.storage === 'object'
+    && typeof window.storage.get === 'function'
+    && typeof window.storage.set === 'function';
+}
+
+async function getStoredStateValue(){
+  if (supportsStorageApi()) {
+    const result = await window.storage.get(STORAGE_KEY, false);
+    return result ? result.value : null;
+  }
+
+  try {
+    return localStorage.getItem(STORAGE_KEY);
+  } catch (e) {
+    return null;
+  }
+}
+
+async function setStoredStateValue(value){
+  if (supportsStorageApi()) {
+    return window.storage.set(STORAGE_KEY, value, false);
+  }
+
+  try {
+    localStorage.setItem(STORAGE_KEY, value);
+  } catch (e) {
+    throw e;
+  }
+}
+
 async function loadState(){
   try{
-    const result = await window.storage.get(STORAGE_KEY, false);
-    state = result ? JSON.parse(result.value) : structuredClone(DEFAULT_STATE);
+    const raw = await getStoredStateValue();
+    state = raw ? JSON.parse(raw) : structuredClone(DEFAULT_STATE);
   }catch(e){
     state = structuredClone(DEFAULT_STATE);
   }
@@ -258,13 +289,13 @@ async function loadState(){
 
 async function saveState(){
   try{
-    await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+    await setStoredStateValue(JSON.stringify(state));
     flashSaved();
   }catch(e){
     // Eén keer opnieuw proberen bij een tijdelijke hik in de opslag-service
     try{
       await new Promise(r => setTimeout(r, 400));
-      await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+      await setStoredStateValue(JSON.stringify(state));
       flashSaved();
     }catch(e2){
       console.error('Opslaan mislukt (na retry)', e2);
