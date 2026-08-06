@@ -70,19 +70,23 @@
       return;
     }
 
-    async function loadFeed(docId, card, renderItem, emptyLabel, howToLabel){
+        async function loadFeed(docId, card, renderItem, emptyLabel, howToLabel, sortFn){
       try{
         const snap = await getDoc(doc(db, 'feeds', docId));
         if(!snap.exists() || !(snap.data().items||[]).length){
           card.innerHTML = `<div class="empty-state"><b>${emptyLabel}</b><br>${howToLabel}</div>`;
           return;
         }
-        const items = snap.data().items;
+        let items = snap.data().items;
+        if(typeof sortFn === 'function'){
+          items = items.slice().sort(sortFn);
+        }
         card.innerHTML = items.slice(0,5).map(renderItem).join('');
       }catch(e){
         card.innerHTML = `<div class="empty-state" style="color:#B5502E;"><b>Fout bij ophalen:</b><br>${e.message}</div>`;
       }
     }
+
 
    function getTodayKey(){
   const d = new Date();
@@ -110,6 +114,17 @@ function setLocalReminderState(key, isCompleted){
     day: getTodayKey(),
     items
   }));
+}
+
+function isReminderDone(i){
+  if(typeof i === 'string') return false;
+  const key = reminderKey(i.title, i.listName, i.dueDate);
+  const localState = getLocalReminderState();
+  return key in localState ? localState[key] : !!i.isCompleted;
+}
+
+function reminderSort(a, b){
+  return (isReminderDone(a) ? 1 : 0) - (isReminderDone(b) ? 1 : 0);
 }
 
 function reminderKey(title, listName, dueDate){
@@ -158,9 +173,11 @@ loadFeed(
       <span>${i.title}</span>
     </div>`;
   },
-  'Nog geen reminders binnengekomen.',
-  'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.'
+    'Nog geen reminders binnengekomen.',
+  'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.',
+  reminderSort
 );
+
 
 
     const calendarColorMap = { 'Privé': '#C77B93', 'Pat & Ira': '#4C7A5D' };
