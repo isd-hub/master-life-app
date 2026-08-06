@@ -70,11 +70,12 @@
       return;
     }
 
-        async function loadFeed(docId, card, renderItem, emptyLabel, howToLabel, sortFn){
+    async function loadFeed(docId, card, renderItem, emptyLabel, howToLabel, sortFn, onItems){
       try{
         const snap = await getDoc(doc(db, 'feeds', docId));
         if(!snap.exists() || !(snap.data().items||[]).length){
           card.innerHTML = `<div class="empty-state"><b>${emptyLabel}</b><br>${howToLabel}</div>`;
+          if(typeof onItems === 'function') onItems([]);
           return;
         }
         let items = snap.data().items;
@@ -82,103 +83,112 @@
           items = items.slice().sort(sortFn);
         }
         card.innerHTML = items.slice(0,5).map(renderItem).join('');
+        if(typeof onItems === 'function') onItems(items);
       }catch(e){
         card.innerHTML = `<div class="empty-state" style="color:#B5502E;"><b>Fout bij ophalen:</b><br>${e.message}</div>`;
       }
     }
 
-
-   function getTodayKey(){
-  const d = new Date();
-  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
-}
-
-function getLocalReminderState(){
-  const raw = localStorage.getItem('remindersLocalState');
-  if(!raw) return {};
-  try{
-    const parsed = JSON.parse(raw);
-    if(parsed.day !== getTodayKey()){
-      return {};
+    function getTodayKey(){
+      const d = new Date();
+      return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
     }
-    return parsed.items || {};
-  }catch(e){
-    return {};
-  }
-}
 
-function setLocalReminderState(key, isCompleted){
-  const items = getLocalReminderState();
-  items[key] = isCompleted;
-  localStorage.setItem('remindersLocalState', JSON.stringify({
-    day: getTodayKey(),
-    items
-  }));
-}
+    function getLocalReminderState(){
+      const raw = localStorage.getItem('remindersLocalState');
+      if(!raw) return {};
+      try{
+        const parsed = JSON.parse(raw);
+        if(parsed.day !== getTodayKey()){
+          return {};
+        }
+        return parsed.items || {};
+      }catch(e){
+        return {};
+      }
+    }
 
-function isReminderDone(i){
-  if(typeof i === 'string') return false;
-  const key = reminderKey(i.title, i.listName, i.dueDate);
-  const localState = getLocalReminderState();
-  return key in localState ? localState[key] : !!i.isCompleted;
-}
+    function setLocalReminderState(key, isCompleted){
+      const items = getLocalReminderState();
+      items[key] = isCompleted;
+      localStorage.setItem('remindersLocalState', JSON.stringify({
+        day: getTodayKey(),
+        items
+      }));
+    }
 
-function reminderSort(a, b){
-  return (isReminderDone(a) ? 1 : 0) - (isReminderDone(b) ? 1 : 0);
-}
+    function reminderKey(title, listName, dueDate){
+      return `${title}|||${listName}|||${dueDate}`;
+    }
 
-function reminderKey(title, listName, dueDate){
-  return `${title}|||${listName}|||${dueDate}`;
-}
+    function isReminderDone(i){
+      if(typeof i === 'string') return false;
+      const key = reminderKey(i.title, i.listName, i.dueDate);
+      const localState = getLocalReminderState();
+      return key in localState ? localState[key] : !!i.isCompleted;
+    }
 
-window.toggleReminder = async function(title, listName, dueDate, checkboxEl){
-  const key = reminderKey(title, listName, dueDate);
-  const goingToComplete = checkboxEl.checked;
-  const actionType = goingToComplete ? 'complete' : 'reopen';
+    function reminderSort(a, b){
+      return (isReminderDone(a) ? 1 : 0) - (isReminderDone(b) ? 1 : 0);
+    }
 
-  checkboxEl.disabled = true;
-  try{
+    let remindersItemsCache = [];
+
+    function renderReminderItem(i){
+      if(typeof i === 'string'){
+        return `<div style="padding:6px 0; font-size:14px;">${i}</div>`;
+      }
+      const t = (i.title||'').replace(/"/g,'&quot;');
+      const l = (i.listName||'').replace(/"/g,'&quot;');
+      const d = (i.dueDate||'').replace(/"/g,'&quot;');
+
+      const key = reminderKey(i.title, i.listName, i.dueDate);
+      const localState = getLocalReminderState();
+      const isDone = key in localState ? localState[key] : !!i.isCompleted;
+
+      return `<div style="padding:6px 0; font-size:14px; display:flex; align-items:center; gap:8px; opacity:${isDone ? '0.4' : '1'};">
+        <input type="checkbox" style="accent-color: #6b5b95;" ${isDone ? 'checked' : ''} onclick="toggleReminder('${t}','${l}','${d}', this)">
+        <span>${i.title}</span>
+      </div>`;
+    }
+
+    function renderReminders(){
+      const card = document.getElementById('remindersCard');
+      const sorted = remindersItemsCache.slice().sort(reminderSort);
+      card.innerHTML = sorted.slice(0,5).map(renderReminderItem).join('');
+    }
+
+    window.toggleReminder = async function(title, listName, dueDate, checkboxEl){
+      const key = reminderKey(title, listName, dueDate);
+      const goingToComplete = checkboxEl.checked;
+      const actionType = goingToComplete ? 'complete' : 'reopen';
+
+      checkboxEl.disabled = true;
+      try{
         await fetch('https://addaction-mvo6meffaq-uc.a.run.app', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ collection: 'reminderActions', key, type: actionType, title, listName, dueDate })
-    });
-    setLocalReminderState(key, goingToComplete);
-    checkboxEl.parentElement.style.opacity = goingToComplete ? '0.4' : '1';
-  }catch(e){
-    checkboxEl.checked = !goingToComplete;
-    alert('Kon actie niet versturen: ' + e.message);
-  }finally{
-    checkboxEl.disabled = false;
-  }
-};
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ collection: 'reminderActions', key, type: actionType, title, listName, dueDate })
+        });
+        setLocalReminderState(key, goingToComplete);
+        renderReminders();
+      }catch(e){
+        checkboxEl.checked = !goingToComplete;
+        alert('Kon actie niet versturen: ' + e.message);
+      }finally{
+        checkboxEl.disabled = false;
+      }
+    };
 
-loadFeed(
-  'reminders',
-  document.getElementById('remindersCard'),
-  (i) => {
-    if(typeof i === 'string'){
-      return `<div style="padding:6px 0; font-size:14px;">${i}</div>`;
-    }
-    const t = (i.title||'').replace(/"/g,'&quot;');
-    const l = (i.listName||'').replace(/"/g,'&quot;');
-    const d = (i.dueDate||'').replace(/"/g,'&quot;');
-
-    const key = reminderKey(i.title, i.listName, i.dueDate);
-    const localState = getLocalReminderState();
-    const isDone = key in localState ? localState[key] : !!i.isCompleted;
-
-    return `<div style="padding:6px 0; font-size:14px; display:flex; align-items:center; gap:8px; opacity:${isDone ? '0.4' : '1'};">
-      <input type="checkbox" style="accent-color: #6b5b95;" ${isDone ? 'checked' : ''} onclick="toggleReminder('${t}','${l}','${d}', this)">
-      <span>${i.title}</span>
-    </div>`;
-  },
-    'Nog geen reminders binnengekomen.',
-  'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.',
-  reminderSort
-);
-
-
+    loadFeed(
+      'reminders',
+      document.getElementById('remindersCard'),
+      renderReminderItem,
+      'Nog geen reminders binnengekomen.',
+      'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.',
+      reminderSort,
+      (items) => { remindersItemsCache = items; }
+    );
 
     const calendarColorMap = { 'Privé': '#C77B93', 'Pat & Ira': '#4C7A5D' };
     const fallbackColor = '#9B8FC9';
