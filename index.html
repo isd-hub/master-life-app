@@ -84,18 +84,57 @@
       }
     }
 
-   window.completeReminder = async function(title, listName, dueDate, checkboxEl){
+   function getTodayKey(){
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+}
+
+function getLocalReminderState(){
+  const raw = localStorage.getItem('remindersLocalState');
+  if(!raw) return {};
+  try{
+    const parsed = JSON.parse(raw);
+    if(parsed.day !== getTodayKey()){
+      return {};
+    }
+    return parsed.items || {};
+  }catch(e){
+    return {};
+  }
+}
+
+function setLocalReminderState(key, isCompleted){
+  const items = getLocalReminderState();
+  items[key] = isCompleted;
+  localStorage.setItem('remindersLocalState', JSON.stringify({
+    day: getTodayKey(),
+    items
+  }));
+}
+
+function reminderKey(title, listName, dueDate){
+  return `${title}|||${listName}|||${dueDate}`;
+}
+
+window.toggleReminder = async function(title, listName, dueDate, checkboxEl){
+  const key = reminderKey(title, listName, dueDate);
+  const goingToComplete = checkboxEl.checked;
+  const actionType = goingToComplete ? 'complete' : 'reopen';
+
   checkboxEl.disabled = true;
   try{
     await fetch('https://addaction-mvo6meffaq-uc.a.run.app', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ collection: 'reminderActions', type: 'complete', title, listName, dueDate })
+      body: JSON.stringify({ collection: 'reminderActions', type: actionType, title, listName, dueDate })
     });
-    checkboxEl.parentElement.style.opacity = '0.4';
+    setLocalReminderState(key, goingToComplete);
+    checkboxEl.parentElement.style.opacity = goingToComplete ? '0.4' : '1';
   }catch(e){
+    checkboxEl.checked = !goingToComplete;
+    alert('Kon actie niet versturen: ' + e.message);
+  }finally{
     checkboxEl.disabled = false;
-    alert('Kon niet afvinken: ' + e.message);
   }
 };
 
@@ -109,15 +148,20 @@ loadFeed(
     const t = (i.title||'').replace(/"/g,'&quot;');
     const l = (i.listName||'').replace(/"/g,'&quot;');
     const d = (i.dueDate||'').replace(/"/g,'&quot;');
-    return `<div style="padding:6px 0; font-size:14px; display:flex; align-items:center; gap:8px;">
-      <input type="checkbox" style="accent-color: #6b5b95;" onclick="completeReminder('${t}','${l}','${d}', this)">
 
+    const key = reminderKey(i.title, i.listName, i.dueDate);
+    const localState = getLocalReminderState();
+    const isDone = key in localState ? localState[key] : !!i.isCompleted;
+
+    return `<div style="padding:6px 0; font-size:14px; display:flex; align-items:center; gap:8px; opacity:${isDone ? '0.4' : '1'};">
+      <input type="checkbox" style="accent-color: #6b5b95;" ${isDone ? 'checked' : ''} onclick="toggleReminder('${t}','${l}','${d}', this)">
       <span>${i.title}</span>
     </div>`;
   },
   'Nog geen reminders binnengekomen.',
   'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.'
 );
+
 
     const calendarColorMap = { 'Privé': '#C77B93', 'Pat & Ira': '#4C7A5D' };
     const fallbackColor = '#9B8FC9';
