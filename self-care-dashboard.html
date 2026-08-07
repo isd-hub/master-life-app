@@ -5,15 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Self Care</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Italiana&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Italiana&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --plum:#F4F3FB;
     --plum-2:#FFFFFF;
     --accent:#9B8FC9;
+    --accent-deep:#7C6BB0;
     --rose:#C9D4EE;
-    --sage:#4C7A5D;
-    --late:#B08BB0;
     --paper:#726C87;
     --muted:#9C97B0;
     --line:#E7E5F5;
@@ -27,133 +26,135 @@
     font-weight:300;
     padding-bottom:80px;
   }
-  header{
-    padding:26px 20px 18px;
-    position:relative;
-    overflow:hidden;
-  }
+  header{padding:26px 20px 18px; position:relative; overflow:hidden;}
   header::before{
-    content:'';
-    position:absolute;
-    top:-60px;
-    right:-40px;
-    width:220px;
-    height:220px;
+    content:''; position:absolute; top:-60px; right:-40px; width:220px; height:220px;
     background:radial-gradient(circle, rgba(155,143,201,0.20) 0%, rgba(201,212,238,0.12) 55%, transparent 75%);
-    filter:blur(2px);
-    pointer-events:none;
-    z-index:0;
+    filter:blur(2px); pointer-events:none; z-index:0;
   }
-  header .eyebrow, header h1, #nextAction{
-    position:relative;
-    z-index:1;
-  }
-  header .eyebrow{
-    font-family:'Inter',sans-serif;
-    font-weight:600;
-    font-size:11px;
-    letter-spacing:1px;
-    color:var(--accent);
-  }
-  header h1{
-    font-family:'Italiana',serif;
-    font-weight:400;
-    font-size:38px;
-    letter-spacing:1.5px;
-    margin:6px 0 12px;
-    -webkit-text-stroke:0.5px currentColor;
-  }
+  header .eyebrow, header h1, #nextAction{position:relative; z-index:1;}
+  header .eyebrow{font-family:'Inter',sans-serif; font-weight:600; font-size:11px; letter-spacing:1px; color:var(--accent);}
+  header h1{font-family:'Italiana',serif; font-weight:400; font-size:38px; letter-spacing:1.5px; margin:6px 0 12px; -webkit-text-stroke:0.5px currentColor;}
   #nextAction{
-    background:rgba(255,255,255,0.45);
-    backdrop-filter:blur(14px) saturate(160%);
-    -webkit-backdrop-filter:blur(14px) saturate(160%);
-    border:1px solid rgba(255,255,255,0.6);
-    border-left:3px solid var(--accent);
-    border-radius:14px;
-    box-shadow:0 2px 10px rgba(155,143,201,0.12);
-    padding:12px 14px;
-    font-size:13px;
+    background:rgba(255,255,255,0.45); backdrop-filter:blur(14px) saturate(160%); -webkit-backdrop-filter:blur(14px) saturate(160%);
+    border:1px solid rgba(255,255,255,0.6); border-left:3px solid var(--accent); border-radius:14px;
+    box-shadow:0 2px 10px rgba(155,143,201,0.12); padding:12px 14px; font-size:13px;
   }
-  #nextAction .label{
-    font-family:'Inter',sans-serif;
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:1px;
-    color:var(--accent);
-    display:block;
-    margin-bottom:4px;
-  }
+  #nextAction .label{font-family:'Inter',sans-serif; font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--accent); display:block; margin-bottom:4px;}
   main{max-width:720px; margin:0 auto; padding:24px 18px;}
   h2.section-title{
-    font-family:'Italiana',serif;
-    font-weight:400;
-    font-size:24px;
-    letter-spacing:0.8px;
-    margin:36px 0 12px;
-    padding-bottom:8px;
-    border-bottom:1px solid var(--line);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    -webkit-text-stroke:0.4px currentColor;
+    font-family:'Italiana',serif; font-weight:400; font-size:24px; letter-spacing:0.8px;
+    margin:36px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; -webkit-text-stroke:0.4px currentColor;
   }
   h2.section-title:first-child{margin-top:0;}
-  h2.section-title .count{
-    font-family:'Inter',sans-serif;
-    font-size:11px;
-    color:var(--muted);
-    font-weight:500;
-  }
+  h2.section-title .count{font-family:'Inter',sans-serif; font-size:11px; color:var(--muted); font-weight:500;}
   .card{
-    background:rgba(255,255,255,0.45);
-    backdrop-filter:blur(14px) saturate(160%);
-    -webkit-backdrop-filter:blur(14px) saturate(160%);
-    border:1px solid rgba(255,255,255,0.6);
-    border-top:1px solid rgba(255,255,255,0.85);
-    border-radius:20px;
-    box-shadow:0 4px 16px rgba(155,143,201,0.12);
-    padding:14px 16px;
-    margin-bottom:10px;
+    background:rgba(255,255,255,0.45); backdrop-filter:blur(14px) saturate(160%); -webkit-backdrop-filter:blur(14px) saturate(160%);
+    border:1px solid rgba(255,255,255,0.6); border-top:1px solid rgba(255,255,255,0.85);
+    border-radius:20px; box-shadow:0 4px 16px rgba(155,143,201,0.12); padding:14px 16px; margin-bottom:10px;
   }
-  .item-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
-  .item-name{font-weight:400; font-size:15px; flex:1; min-width:140px;}
-  .status-badge{
-    font-family:'Inter',sans-serif;
-    font-size:11px;
-    font-weight:700;
-    padding:4px 11px;
-    border-radius:20px;
-    white-space:nowrap;
+
+  .filter-row{display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;}
+  .filter-chip{
+    font-family:'Inter',sans-serif; font-size:12px; padding:6px 14px; border-radius:14px;
+    border:1px solid var(--line); background:rgba(255,255,255,0.4); color:var(--muted); cursor:pointer;
   }
-  .status-ok{background:rgba(76,122,93,0.15); color:#4C7A5D;}
-  .status-soon{background:rgba(212,162,76,0.2); color:#A9711F;}
-  .status-late{background:rgba(176,139,176,0.18); color:#8F6B90;}
-  .status-none{background:rgba(158,147,172,0.15); color:var(--muted);}
-  .date-row{display:flex; align-items:center; gap:10px; margin-top:8px; font-size:12px; color:var(--muted); flex-wrap:wrap;}
-  input[type="date"]{
-    background:var(--plum);
-    border:1px solid var(--line);
-    color:var(--paper);
-    font-family:'Inter',sans-serif;
-    font-size:12px;
-    padding:4px 6px;
-    border-radius:4px;
+  .filter-chip.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .edit-toggle{
+    font-family:'Inter',sans-serif; font-size:11px; font-weight:600; color:var(--accent-deep);
+    background:none; border:none; cursor:pointer; padding:0; margin-left:auto;
   }
-  .interval-tag{font-family:'Inter',sans-serif; font-size:11px; color:var(--muted);}
-  button{
-    font-family:'Inter',sans-serif;
-    font-weight:600;
-    font-size:13px;
-    border:none;
-    border-radius:6px;
-    padding:8px 12px;
-    cursor:pointer;
+
+  /* Uitklap-sectie */
+  .expand-toggle{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    font-family:'Inter',sans-serif; font-size:12px; color:var(--accent-deep); font-weight:600;
+    padding:10px; cursor:pointer; border-top:1px dashed var(--line); margin-top:4px;
   }
-  .btn-ghost{background:transparent; color:var(--accent); border:1px solid var(--line);}
-  .btn-ghost:hover{border-color:var(--accent);}
-  .btn-add{background:none; border:1px dashed var(--line); color:var(--muted); width:100%; padding:10px; margin-top:6px;}
+  .expand-toggle .chevron{transition:transform 0.25s ease; display:inline-block;}
+  .expand-toggle.open .chevron{transform:rotate(180deg);}
+  .expand-body{max-height:0; overflow:hidden; transition:max-height 0.3s ease;}
+  .expand-body.open{max-height:2000px;}
+
+  .tracker-row{display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--line);}
+  .tracker-row:last-child{border-bottom:none;}
+  .tracker-main{flex:1; min-width:0; cursor:pointer;}
+  .tracker-name{font-size:14px; font-weight:400;}
+  .cat-tag{
+    font-family:'Inter',sans-serif; font-size:9px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--accent-deep); background:rgba(155,143,201,0.15); padding:2px 6px; border-radius:6px; margin-left:6px;
+  }
+  .tracker-meta{font-size:11px; color:var(--muted); margin-top:2px;}
+  .remove-x{background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer; padding:0 4px; flex-shrink:0;}
+
+  .ring{width:42px; height:42px; border-radius:50%; position:relative; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;}
+  .ring svg{position:absolute; top:0; left:0; transform:rotate(-90deg);}
+  .ring .ring-label{font-family:'Inter',sans-serif; font-size:10px; font-weight:600; color:var(--accent-deep); z-index:1;}
+  .ring .center-dot{width:8px; height:8px; border-radius:50%; background:var(--accent-deep); z-index:1;}
+  .ring .sparkle-a{position:absolute; top:-4px; right:-4px; font-size:11px;}
+  .ring .sparkle-b{position:absolute; bottom:-4px; left:-4px; font-size:11px;}
+  @keyframes ringPulse{
+    0%{box-shadow:0 0 0 0 rgba(155,143,201,0.5);}
+    70%{box-shadow:0 0 0 8px rgba(155,143,201,0);}
+    100%{box-shadow:0 0 0 0 rgba(155,143,201,0);}
+  }
+  .ring.pulsing{animation:ringPulse 2.6s infinite;}
+
+  .breathe-icon{width:20px; height:20px; border-radius:50%; position:relative; cursor:pointer; flex-shrink:0; display:inline-block; vertical-align:middle; margin-left:5px;}
+  .breathe-clip{
+    width:20px; height:20px; border-radius:50%; overflow:hidden;
+    background:rgba(155,143,201,0.12); border:1px solid var(--line); display:flex; align-items:center;
+  }
+  .breathe-clip .face{font-size:17px; margin-left:-2px;}
+  .breathe-icon .plus{
+    position:absolute; bottom:-2px; right:-2px; width:9px; height:9px; border-radius:50%;
+    background:var(--accent-deep); color:#fff; font-size:7px; font-weight:600;
+    display:flex; align-items:center; justify-content:center; border:1px solid #fff; z-index:2;
+  }
+  .breathe-icon.used{opacity:0.35; pointer-events:none;}
+
+  .btn-add{background:none; border:1px dashed var(--line); color:var(--muted); width:100%; padding:10px; margin-top:6px; font-family:'Inter',sans-serif; font-weight:600; font-size:13px; border-radius:6px; cursor:pointer;}
   .btn-add:hover{color:var(--accent); border-color:var(--accent);}
-  .remove-x{background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer; padding:0 6px;}
+
+  /* Popup — vloeiende sheet-transitie van onderen */
+  .popup-overlay{
+    display:flex; position:fixed; inset:0; background:rgba(60,50,80,0);
+    align-items:flex-end; justify-content:center; z-index:50;
+    pointer-events:none; transition:background 0.3s ease;
+  }
+  .popup-overlay.show{background:rgba(60,50,80,0.25); pointer-events:auto;}
+  .popup-card{
+    background:rgba(255,255,255,0.92); backdrop-filter:blur(20px); border-radius:24px 24px 0 0;
+    padding:26px 22px 32px; max-width:420px; width:100%; text-align:center;
+    box-shadow:0 -10px 40px rgba(100,80,140,0.2);
+    transform:translateY(100%); transition:transform 0.32s cubic-bezier(.32,.72,0,1);
+  }
+  .popup-overlay.show .popup-card{transform:translateY(0);}
+  .popup-ring{width:60px; height:60px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; background:var(--accent); color:#fff; font-weight:600; font-size:13px;}
+  .popup-title{font-size:16px; font-weight:500; margin-bottom:4px; color:var(--paper);}
+  .popup-last{font-size:12px; color:var(--muted); margin-bottom:16px;}
+  .popup-btn{
+    width:100%; font-family:'Inter',sans-serif; font-weight:600; font-size:13px; border:none;
+    border-radius:14px; padding:10px 20px; cursor:pointer; margin-bottom:8px;
+  }
+  .popup-register{background:var(--accent-deep); color:#fff;}
+  .popup-close{background:none; color:var(--muted); font-weight:500;}
+
+  .habit-line{display:flex; align-items:center;}
+  .habit-name-slot{flex:1; min-width:0;}
+  .habit-dots-slot{display:flex; gap:5px; margin-left:18px;}
+  .habit-dot-slot{width:16px; flex:0 0 16px; display:flex; align-items:center; justify-content:center;}
+  .habit-dot-slot span{font-family:'Inter',sans-serif; font-size:9px; color:var(--muted);}
+  .habit-count-slot{width:70px; margin-left:18px; text-align:right; flex-shrink:0;}
+  .habit-row{padding:9px 0; border-bottom:1px solid var(--line);}
+  .habit-row:last-child{border-bottom:none;}
+  .habit-name{font-size:13px; font-weight:400; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .habit-sub{font-size:10px; color:var(--muted); font-family:'Inter',sans-serif;}
+  .habit-dot{width:15px; height:15px; border-radius:50%; border:1.5px solid var(--line); background:var(--plum); cursor:pointer;}
+  .habit-dot.done{background:var(--accent); border-color:var(--accent);}
+  .habit-count{font-family:'Inter',sans-serif; font-size:10px; color:var(--accent-deep); white-space:nowrap;}
+
   .inv-group{margin-bottom:16px;}
   .inv-label{font-size:12px; color:var(--accent); font-weight:700; margin-bottom:6px; font-family:'Inter',sans-serif;}
   .inv-item{display:flex; align-items:center; gap:10px; padding:6px 0;}
@@ -161,39 +162,22 @@
   .inv-item.done .inv-text{color:var(--muted); text-decoration:line-through;}
   .inv-text{flex:1; font-size:14px;}
   .new-item-row{display:flex; gap:8px; margin-top:8px;}
-  .new-item-row input{
-    flex:1; background:var(--plum); border:1px solid var(--line); color:var(--paper);
-    padding:8px; border-radius:5px; font-size:13px;
-  }
-  .habit-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:6px;}
-  .habit-day{
-    aspect-ratio:1; border-radius:6px; border:1px solid var(--line);
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Inter',sans-serif; font-size:11px; color:var(--muted);
-    cursor:pointer; background:var(--plum);
-  }
-  .habit-day.done{background:var(--sage); color:#fff; border-color:var(--sage);}
-  .habit-day.today{border-color:var(--accent); border-width:2px;}
-  .habit-row{margin-bottom:16px;}
-  .habit-name{font-size:14px; font-weight:400; margin-bottom:2px;}
-  .habit-sub{font-size:11px; color:var(--muted); font-family:'Inter',sans-serif;}
+  .new-item-row input{flex:1; background:var(--plum); border:1px solid var(--line); color:var(--paper); padding:8px; border-radius:5px; font-size:13px;}
+  .btn-ghost{font-family:'Inter',sans-serif; font-weight:600; font-size:13px; background:transparent; color:var(--accent); border:1px solid var(--line); border-radius:6px; padding:8px 12px; cursor:pointer;}
+  .btn-ghost:hover{border-color:var(--accent);}
+
   .therapy-note textarea{
     width:100%; min-height:90px; background:var(--plum); border:1px solid var(--line);
-    color:var(--paper); border-radius:6px; padding:10px; font-family:'Inter',sans-serif;
-    font-size:13px; resize:vertical;
+    color:var(--paper); border-radius:6px; padding:10px; font-family:'Inter',sans-serif; font-size:13px; resize:vertical;
   }
   .bridge-note{
-    background:rgba(255,255,255,0.4);
-    backdrop-filter:blur(14px) saturate(160%);
-    -webkit-backdrop-filter:blur(14px) saturate(160%);
-    border:1px dashed rgba(255,255,255,0.7); border-radius:16px;
-    padding:14px 16px; font-size:13px; color:var(--muted); margin-top:24px; line-height:1.5;
+    background:rgba(255,255,255,0.4); backdrop-filter:blur(14px) saturate(160%); -webkit-backdrop-filter:blur(14px) saturate(160%);
+    border:1px dashed rgba(255,255,255,0.7); border-radius:16px; padding:14px 16px; font-size:13px; color:var(--muted); margin-top:24px; line-height:1.5;
   }
   .bridge-note b{color:var(--paper);}
   .save-flash{
-    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
-    background:var(--sage); color:#fff; font-size:12px; font-weight:600;
-    padding:8px 16px; border-radius:20px; opacity:0; transition:opacity 0.3s; pointer-events:none;
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--accent-deep); color:#fff;
+    font-size:12px; font-weight:600; padding:8px 16px; border-radius:20px; opacity:0; transition:opacity 0.3s; pointer-events:none;
   }
   .save-flash.show{opacity:1;}
   .loading{text-align:center; color:var(--muted); padding:40px; font-family:'Inter',sans-serif; text-transform:uppercase; letter-spacing:1px; font-size:13px;}
@@ -212,6 +196,10 @@
   <div class="loading">Laden…</div>
 </main>
 
+<div class="popup-overlay" id="popupOverlay" onclick="if(event.target===this) closePopup()">
+  <div class="popup-card" id="popupCard"></div>
+</div>
+
 <div class="save-flash" id="saveFlash">Opgeslagen</div>
 
 <script>
@@ -219,64 +207,54 @@ const STORAGE_KEY = 'self-care-dashboard-state';
 
 const DEFAULT_STATE = {
   tracker: [
-    { id:'gezicht', name:'Gezichtsverzorging', intervalDays:7, lastDone:null, note:'' },
-    { id:'nagels', name:'Nagels doen', intervalDays:14, lastDone:null, note:'' },
-    { id:'hardlopen', name:'Hardlopen', intervalDays:7, lastDone:null, note:'' },
-    { id:'yoga', name:'Yoga', intervalDays:7, lastDone:null, note:'' },
+    { id:'gezicht', name:'Gezichtsverzorging', category:'personal', intervalDays:7, lastDone:null, extraDays:0, breathingUsed:false, note:'' },
+    { id:'nagels', name:'Nagels doen', category:'personal', intervalDays:14, lastDone:null, extraDays:0, breathingUsed:false, note:'' },
+    { id:'beddengoed', name:'Beddengoed verschonen', category:'home', intervalDays:14, lastDone:null, extraDays:0, breathingUsed:false, note:'' },
   ],
   supplies: {
     'Make-up': [],
     'Verzorging': [],
     'Overig': []
   },
-  reminders: [
-    { id:'vitd', name:'Vitamine D', intervalDays:1, lastDone:null, note:'Voorbeeld — pas aan of verwijder' },
-  ],
   habits: [
-    { id:'beweging', name:'Beweging (hardlopen/yoga)', sub:'fysiek', days:{} },
-    { id:'buiten', name:'Even buiten geweest', sub:'mentaal/emotioneel', days:{} },
-    { id:'moment', name:'Moment voor mezelf', sub:'mentaal/emotioneel', days:{} },
+    { id:'hardlopen', name:'Hardlopen', sub:'fysiek', days:{} },
+    { id:'yoga', name:'Yoga', sub:'fysiek', days:{} },
+    { id:'checkin', name:'Mentale/emotionele check-in', sub:'mentaal/emotioneel', days:{} },
   ],
   therapyNote: ''
 };
 
 let state = null;
+let trackerFilter = 'all'; // 'all' | 'personal' | 'home'
+let supplyFilter = 'all';  // 'all' | groepnaam
+let trackerExpandOpen = false;
+let supplyExpandOpen = false;
+let trackerEditMode = false;
+let supplyEditMode = false;
 
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function daysBetween(a,b){ return Math.round((new Date(b+'T00:00:00') - new Date(a+'T00:00:00')) / 86400000); }
 function daysSince(dateStr){ if(!dateStr) return null; return daysBetween(dateStr, todayStr()); }
-
-function supportsStorageApi(){
-  return typeof window.storage === 'object'
-    && typeof window.storage.get === 'function'
-    && typeof window.storage.set === 'function';
+function formatDateNL(dateStr){
+  if(!dateStr) return '';
+  const d = new Date(dateStr+'T00:00:00');
+  return d.toLocaleDateString('nl-NL', {weekday:'long', day:'numeric', month:'long'});
 }
 
+function supportsStorageApi(){
+  return typeof window.storage === 'object' && typeof window.storage.get === 'function' && typeof window.storage.set === 'function';
+}
 async function getStoredStateValue(){
   if (supportsStorageApi()) {
     const result = await window.storage.get(STORAGE_KEY, false);
     return result ? result.value : null;
   }
-
-  try {
-    return localStorage.getItem(STORAGE_KEY);
-  } catch (e) {
-    return null;
-  }
+  try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
 }
-
 async function setStoredStateValue(value){
-  if (supportsStorageApi()) {
-    return window.storage.set(STORAGE_KEY, value, false);
-  }
-
-  try {
-    localStorage.setItem(STORAGE_KEY, value);
-  } catch (e) {
-    throw e;
-  }
+  if (supportsStorageApi()) { return window.storage.set(STORAGE_KEY, value, false); }
+  try { localStorage.setItem(STORAGE_KEY, value); } catch (e) { throw e; }
 }
-
 async function loadState(){
   try{
     const raw = await getStoredStateValue();
@@ -284,15 +262,14 @@ async function loadState(){
   }catch(e){
     state = structuredClone(DEFAULT_STATE);
   }
+  state.tracker.forEach(i => { if(i.category===undefined) i.category='personal'; if(i.extraDays===undefined) i.extraDays=0; if(i.breathingUsed===undefined) i.breathingUsed=false; });
   render();
 }
-
 async function saveState(){
   try{
     await setStoredStateValue(JSON.stringify(state));
     flashSaved();
   }catch(e){
-    // Eén keer opnieuw proberen bij een tijdelijke hik in de opslag-service
     try{
       await new Promise(r => setTimeout(r, 400));
       await setStoredStateValue(JSON.stringify(state));
@@ -302,37 +279,91 @@ async function saveState(){
     }
   }
 }
-
 function flashSaved(){
   const el = document.getElementById('saveFlash');
   el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'), 1200);
 }
 
-function getStatus(item){
-  if(!item.lastDone) return {label:'Onbekend', cls:'status-none'};
+function ringData(item){
+  const effectiveInterval = item.intervalDays + (item.extraDays||0);
+  if(!item.lastDone){
+    return { state:'unknown', daysUntil:null, fillOffset:0 };
+  }
   const since = daysSince(item.lastDone);
-  const remaining = item.intervalDays - since;
-  if(remaining < 0) return {label:`Te laat · ${Math.abs(remaining)}d`, cls:'status-late'};
-  if(remaining <= 1) return {label:`Vandaag/morgen`, cls:'status-soon'};
-  return {label:`OK · nog ${remaining}d`, cls:'status-ok'};
+  const daysUntil = effectiveInterval - since;
+  if(daysUntil > 0){
+    const circumference = 106.8;
+    const fillOffset = circumference * (1 - since/effectiveInterval);
+    return { state:'normal', daysUntil, fillOffset: Math.max(0, fillOffset) };
+  }
+  if(daysUntil === 0) return { state:'today', daysUntil:0 };
+  return { state:'due', daysUntil };
+}
+// sorteerwaarde: hoe kleiner, hoe urgenter (due/today eerst, dan oplopend aantal dagen, onbekend als laatste)
+function sortScore(item){
+  const rd = ringData(item);
+  if(rd.state === 'unknown') return 99999;
+  if(rd.state === 'due') return -1000 + rd.daysUntil; // hoe verder voorbij, hoe urgenter
+  if(rd.state === 'today') return 0;
+  return rd.daysUntil;
+}
+function isUrgent(item){
+  const rd = ringData(item);
+  return rd.state === 'due' || rd.state === 'today' || (rd.state==='normal' && rd.daysUntil<=1);
 }
 
-function overdueScore(item){
-  if(!item.lastDone) return 9999;
-  const since = daysSince(item.lastDone);
-  return since - item.intervalDays;
+function renderRing(item){
+  const rd = ringData(item);
+  if(rd.state === 'unknown'){
+    return `<div class="ring" onclick="openPopup('tracker','${item.id}')">
+      <svg width="42" height="42"><circle cx="21" cy="21" r="17" stroke="rgba(155,143,201,0.2)" stroke-width="4" fill="none"/></svg>
+      <span class="ring-label">–</span>
+    </div>`;
+  }
+  if(rd.state === 'normal'){
+    return `<div class="ring" onclick="openPopup('tracker','${item.id}')">
+      <svg width="42" height="42">
+        <circle cx="21" cy="21" r="17" stroke="rgba(155,143,201,0.2)" stroke-width="4" fill="none"/>
+        <circle cx="21" cy="21" r="17" stroke="#9B8FC9" stroke-width="4" fill="none" stroke-dasharray="106.8" stroke-dashoffset="${rd.fillOffset}"/>
+      </svg>
+      <span class="ring-label">${rd.daysUntil}d</span>
+    </div>`;
+  }
+  if(rd.state === 'today'){
+    return `<div class="ring pulsing" onclick="openPopup('tracker','${item.id}')">
+      <svg width="42" height="42"><circle cx="21" cy="21" r="17" stroke="#9B8FC9" stroke-width="4" fill="none"/></svg>
+      <div class="center-dot"></div>
+      <span class="sparkle-a">✨</span><span class="sparkle-b">✨</span>
+    </div>`;
+  }
+  return `<div class="ring" onclick="openPopup('tracker','${item.id}')">
+    <svg width="42" height="42"><circle cx="21" cy="21" r="17" stroke="#7C6BB0" stroke-width="4" fill="none"/></svg>
+    <div class="center-dot"></div>
+    <span class="sparkle-a">✨</span><span class="sparkle-b">✨</span>
+  </div>`;
 }
 
 function renderNextAction(){
-  const all = [...state.tracker, ...state.reminders];
+  const all = state.tracker;
   if(all.length === 0){ document.getElementById('nextAction').innerHTML = ''; return; }
-  const sorted = [...all].sort((a,b)=>overdueScore(b)-overdueScore(a));
+  const sorted = [...all].sort((a,b)=>sortScore(a)-sortScore(b));
   const top = sorted[0];
-  const status = getStatus(top);
-  document.getElementById('nextAction').innerHTML = `
-    <span class="label">Als je er één zou pakken</span>
-    ${top.name} — <span class="status-badge ${status.cls}" style="margin-left:4px;">${status.label}</span>`;
+  const rd = ringData(top);
+  const label = rd.state==='unknown' ? 'nog niet gedaan' : rd.state==='normal' ? `over ${rd.daysUntil}d` : rd.state==='today' ? 'vandaag' : 'aan de beurt';
+  document.getElementById('nextAction').innerHTML = `<span class="label">Als je er één zou pakken</span>${top.name} — ${label}`;
+}
+
+function renderTrackerRow(item){
+  return `
+    <div class="tracker-row">
+      <div class="tracker-main" onclick="openPopup('tracker','${item.id}')">
+        <div class="tracker-name">${item.name}<span class="breathe-icon ${item.breathingUsed?'used':''}" onclick="event.stopPropagation(); useBreathingRoom('${item.id}')" title="Geef me wat ademruimte"><span class="breathe-clip"><span class="face">🌬️</span></span><span class="plus">+</span></span>${item.category ? `<span class="cat-tag">${item.category}</span>` : ''}</div>
+        <div class="tracker-meta">${item.lastDone ? daysSince(item.lastDone)+'d geleden' : 'nog niet geregistreerd'}</div>
+      </div>
+      ${renderRing(item)}
+      ${trackerEditMode ? `<button class="remove-x" onclick="event.stopPropagation(); removeTracker('${item.id}')">×</button>` : ''}
+    </div>`;
 }
 
 function render(){
@@ -341,31 +372,45 @@ function render(){
   let html = '';
 
   // Wanneer heb ik voor het laatst...
-  html += `<h2 class="section-title">Wanneer heb ik voor het laatst… <span class="count">${state.tracker.length} items</span></h2>`;
-  state.tracker.forEach(item => {
-    const status = getStatus(item);
-    const since = item.lastDone ? daysSince(item.lastDone) : null;
-    html += `
-      <div class="card">
-        <div class="item-row">
-          <div class="item-name">${item.name}</div>
-          <span class="status-badge ${status.cls}">${status.label}</span>
-          <button class="remove-x" onclick="removeTracker('${item.id}')">×</button>
-        </div>
-        <div class="date-row">
-          <span class="interval-tag">interval: ${item.intervalDays}d</span>
-          <span>·</span>
-          <span>laatst gedaan:</span>
-          <input type="date" value="${item.lastDone||''}" onchange="updateTrackerDate('${item.id}', this.value)">
-          ${since!==null ? `<span>(${since}d geleden)</span>` : ''}
-        </div>
-      </div>`;
-  });
+  const filteredByCat = state.tracker.filter(i => trackerFilter==='all' || i.category===trackerFilter);
+  const sortedTracker = [...filteredByCat].sort((a,b)=>sortScore(a)-sortScore(b));
+  const urgent = sortedTracker.filter(isUrgent);
+  const rest = sortedTracker.filter(i => !isUrgent(i));
+
+  html += `<h2 class="section-title">Wanneer heb ik voor het laatst… <span class="count">${filteredByCat.length} items</span></h2>`;
+  html += `<div class="filter-row">
+    <div class="filter-chip ${trackerFilter==='all'?'active':''}" onclick="setTrackerFilter('all')">Alles</div>
+    <div class="filter-chip ${trackerFilter==='personal'?'active':''}" onclick="setTrackerFilter('personal')">Personal</div>
+    <div class="filter-chip ${trackerFilter==='home'?'active':''}" onclick="setTrackerFilter('home')">Home</div>
+    <button class="edit-toggle" onclick="toggleTrackerEdit()">${trackerEditMode?'Klaar':'Bewerken'}</button>
+  </div>`;
+  html += `<div class="card">`;
+  if(urgent.length === 0){ html += `<div class="empty-hint">Niets dringends — lekker bezig ✨</div>`; }
+  urgent.forEach(item => { html += renderTrackerRow(item); });
+  if(rest.length > 0){
+    html += `<div class="expand-toggle ${trackerExpandOpen?'open':''}" onclick="toggleTrackerExpand()">
+      <span>${trackerExpandOpen?'Verberg':'Toon'} overige ${rest.length} items</span><span class="chevron">⌄</span>
+    </div>
+    <div class="expand-body ${trackerExpandOpen?'open':''}">`;
+    rest.forEach(item => { html += renderTrackerRow(item); });
+    html += `</div>`;
+  }
+  html += `</div>`;
   html += `<button class="btn-add" onclick="addTrackerItem()">+ item toevoegen</button>`;
 
-  // Voorraad
-  html += `<h2 class="section-title">Voorraad</h2><div class="card">`;
-  Object.keys(state.supplies).forEach(group => {
+  // Voorraad — uitklapbaar, met categorie-filter
+  const supplyGroups = Object.keys(state.supplies);
+  html += `<h2 class="section-title">Voorraad</h2>`;
+  html += `<div class="expand-toggle ${supplyExpandOpen?'open':''}" style="border-top:none; border:1px solid var(--line); border-radius:14px; background:rgba(255,255,255,0.4);" onclick="toggleSupplyExpand()">
+    <span>${supplyExpandOpen?'Verberg':'Toon'} voorraadlijst</span><span class="chevron">⌄</span>
+  </div>`;
+  html += `<div class="expand-body ${supplyExpandOpen?'open':''}" style="margin-top:8px;"><div class="card">`;
+  html += `<div class="filter-row">
+    <div class="filter-chip ${supplyFilter==='all'?'active':''}" onclick="setSupplyFilter('all')">Alles</div>
+    ${supplyGroups.map(g=>`<div class="filter-chip ${supplyFilter===g?'active':''}" onclick="setSupplyFilter('${g}')">${g}</div>`).join('')}
+    <button class="edit-toggle" onclick="toggleSupplyEdit()">${supplyEditMode?'Klaar':'Bewerken'}</button>
+  </div>`;
+  supplyGroups.filter(g => supplyFilter==='all' || supplyFilter===g).forEach(group => {
     html += `<div class="inv-group"><div class="inv-label">${group}</div>`;
     if(state.supplies[group].length === 0){
       html += `<div class="empty-hint">Nog leeg — voeg toe wat je bijhoudt.</div>`;
@@ -375,7 +420,7 @@ function render(){
         <div class="inv-item ${it.done?'done':''}">
           <input type="checkbox" ${it.done?'checked':''} onchange="toggleSupply('${group}', ${idx})">
           <div class="inv-text">${it.text}</div>
-          <button class="remove-x" onclick="removeSupply('${group}', ${idx})">×</button>
+          ${supplyEditMode ? `<button class="remove-x" onclick="removeSupply('${group}', ${idx})">×</button>` : ''}
         </div>`;
     });
     html += `
@@ -385,57 +430,44 @@ function render(){
       </div>
     </div>`;
   });
-  html += `</div>`;
-
-  // Herinneringen (vitamines/medicatie)
-  html += `<h2 class="section-title">Herinneringen <span class="count">${state.reminders.length} items</span></h2>`;
-  state.reminders.forEach(item => {
-    const status = getStatus(item);
-    const since = item.lastDone ? daysSince(item.lastDone) : null;
-    html += `
-      <div class="card">
-        <div class="item-row">
-          <div class="item-name">${item.name}</div>
-          <span class="status-badge ${status.cls}">${status.label}</span>
-          <button class="remove-x" onclick="removeReminder('${item.id}')">×</button>
-        </div>
-        ${item.note ? `<div class="empty-hint">${item.note}</div>` : ''}
-        <div class="date-row">
-          <span class="interval-tag">interval: ${item.intervalDays}d</span>
-          <span>·</span>
-          <span>laatst gedaan:</span>
-          <input type="date" value="${item.lastDone||''}" onchange="updateReminderDate('${item.id}', this.value)">
-          ${since!==null ? `<span>(${since}d geleden)</span>` : ''}
-        </div>
-      </div>`;
-  });
-  html += `<button class="btn-add" onclick="addReminder()">+ herinnering toevoegen</button>`;
+  html += `<div class="empty-hint" style="margin-top:8px;">Veel/weinig/op-status en NFC-koppeling volgen nog — dit is voorlopig de eenvoudige versie.</div>`;
+  html += `</div></div>`;
 
   // Habit tracker
   html += `<h2 class="section-title">Habit tracker <span class="count">deze week</span></h2><div class="card">`;
-  const last7 = [];
+  const weekDates = [];
   const now = new Date();
-  const dayNum = now.getDay(); // 0=zo,1=ma,...6=za
+  const dayNum = now.getDay();
   const diffToMonday = dayNum === 0 ? -6 : 1 - dayNum;
   const monday = new Date(now);
   monday.setDate(now.getDate() + diffToMonday);
   for(let i=0;i<7;i++){
     const d = new Date(monday);
     d.setDate(monday.getDate()+i);
-    last7.push(d.toISOString().slice(0,10));
+    weekDates.push(d.toISOString().slice(0,10));
   }
+  const dayLabels = ['Ma','Di','Wo','Do','Vr','Za','Zo'];
+  html += `<div class="habit-line" style="padding-bottom:4px;">
+    <div class="habit-name-slot"></div>
+    <div class="habit-dots-slot">${dayLabels.map(l=>`<div class="habit-dot-slot"><span>${l}</span></div>`).join('')}</div>
+    <div class="habit-count-slot"></div>
+  </div>`;
   state.habits.forEach(habit => {
+    const weekCount = weekDates.filter(d => !!habit.days[d]).length;
     html += `
-      <div class="habit-row">
-        <div class="habit-name">${habit.name}</div>
-        <div class="habit-sub">${habit.sub}</div>
-        <div class="habit-grid">
-          ${last7.map(d => {
+      <div class="habit-line habit-row">
+        <div class="habit-name-slot">
+          <div class="habit-name">${habit.name}</div>
+          <div class="habit-sub">${habit.sub}</div>
+        </div>
+        <div class="habit-dots-slot">
+          ${weekDates.map(d => {
             const done = !!habit.days[d];
-            const isToday = d === todayStr();
-            const dayLabel = new Date(d+'T00:00:00').toLocaleDateString('nl-NL',{weekday:'narrow'});
-            return `<div class="habit-day ${done?'done':''} ${isToday?'today':''}" onclick="toggleHabit('${habit.id}','${d}')">${dayLabel}</div>`;
+            return `<div class="habit-dot-slot"><div class="habit-dot ${done?'done':''}" onclick="toggleHabit('${habit.id}','${d}')"></div></div>`;
           }).join('')}
+        </div>
+        <div class="habit-count-slot">
+          ${weekCount > 2 ? `<span class="habit-count">${weekCount}× deze week</span>` : ''}
         </div>
       </div>`;
   });
@@ -456,16 +488,53 @@ function render(){
   app.innerHTML = html;
 }
 
-// Tracker
-function updateTrackerDate(id, value){
+function setTrackerFilter(f){ trackerFilter = f; render(); }
+function setSupplyFilter(f){ supplyFilter = f; render(); }
+function toggleTrackerExpand(){ trackerExpandOpen = !trackerExpandOpen; render(); }
+function toggleSupplyExpand(){ supplyExpandOpen = !supplyExpandOpen; render(); }
+function toggleTrackerEdit(){ trackerEditMode = !trackerEditMode; render(); }
+function toggleSupplyEdit(){ supplyEditMode = !supplyEditMode; render(); }
+
+function openPopup(source, id){
   const item = state.tracker.find(i => i.id === id);
-  if(item){ item.lastDone = value; saveState(); render(); }
+  if(!item) return;
+  const rd = ringData(item);
+  const ringLabel = rd.state==='unknown' ? '–' : rd.state==='normal' ? rd.daysUntil+'d' : '✨';
+  const ringColor = rd.state==='due' ? '#7C6BB0' : '#9B8FC9';
+  document.getElementById('popupCard').innerHTML = `
+    <div class="popup-ring" style="background:${ringColor};">${ringLabel}</div>
+    <div class="popup-title">${item.name}</div>
+    <div class="popup-last">${item.lastDone ? 'Laatst: '+formatDateNL(item.lastDone) : 'Nog niet eerder geregistreerd'}</div>
+    <button class="popup-btn popup-register" onclick="registerToday('${id}')">Vandaag gedaan ✓</button>
+    <button class="popup-btn popup-close" onclick="closePopup()">Sluiten</button>
+  `;
+  requestAnimationFrame(()=>document.getElementById('popupOverlay').classList.add('show'));
 }
+function closePopup(){ document.getElementById('popupOverlay').classList.remove('show'); }
+function registerToday(id){
+  const item = state.tracker.find(i => i.id === id);
+  if(item){
+    item.lastDone = todayStr();
+    item.extraDays = 0;
+    item.breathingUsed = false;
+    saveState(); render(); closePopup();
+  }
+}
+function useBreathingRoom(id){
+  const item = state.tracker.find(i => i.id === id);
+  if(item && !item.breathingUsed){
+    item.extraDays = Math.round(item.intervalDays * 0.25);
+    item.breathingUsed = true;
+    saveState(); render();
+  }
+}
+
 function addTrackerItem(){
   const name = prompt('Naam van het zelfzorg-punt:');
   if(!name) return;
+  const category = (prompt('Categorie: "personal" of "home"?', 'personal')||'personal').toLowerCase();
   const intervalDays = parseInt(prompt('Interval in dagen (bv. 7):', '7')) || 7;
-  state.tracker.push({ id:'custom-'+Date.now(), name, intervalDays, lastDone:null, note:'' });
+  state.tracker.push({ id:'custom-'+Date.now(), name, category: category==='home'?'home':'personal', intervalDays, lastDone:null, extraDays:0, breathingUsed:false, note:'' });
   saveState(); render();
 }
 function removeTracker(id){
@@ -473,7 +542,6 @@ function removeTracker(id){
   saveState(); render();
 }
 
-// Supplies
 function toggleSupply(group, idx){
   state.supplies[group][idx].done = !state.supplies[group][idx].done;
   saveState(); render();
@@ -491,37 +559,12 @@ function addSupply(group){
   saveState(); render();
 }
 
-// Reminders
-function updateReminderDate(id, value){
-  const item = state.reminders.find(i => i.id === id);
-  if(item){ item.lastDone = value; saveState(); render(); }
-}
-function addReminder(){
-  const name = prompt('Naam (bv. vitamine, medicatie):');
-  if(!name) return;
-  const intervalDays = parseInt(prompt('Interval in dagen (bv. 1 voor dagelijks):', '1')) || 1;
-  state.reminders.push({ id:'custom-'+Date.now(), name, intervalDays, lastDone:null, note:'' });
-  saveState(); render();
-}
-function removeReminder(id){
-  state.reminders = state.reminders.filter(i => i.id !== id);
-  saveState(); render();
-}
-
-// Habits
 function toggleHabit(id, dateStr){
   const habit = state.habits.find(h => h.id === id);
-  if(habit){
-    habit.days[dateStr] = !habit.days[dateStr];
-    saveState(); render();
-  }
+  if(habit){ habit.days[dateStr] = !habit.days[dateStr]; saveState(); render(); }
 }
 
-// Therapy
-function updateTherapyNote(value){
-  state.therapyNote = value;
-  saveState();
-}
+function updateTherapyNote(value){ state.therapyNote = value; saveState(); }
 
 loadState();
 </script>
