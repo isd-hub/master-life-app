@@ -121,11 +121,21 @@
       return `${title}|||${listName}|||${dueDate}`;
     }
 
+    // NIEUW: de shortcut stuurt isCompleted als tekst ("Yes"/"No"), niet als true/false.
+    // Deze functie interpreteert dat correct, en blijft ook werken als het ooit
+    // wel een echte boolean wordt.
+    function feedIsCompleted(value){
+      if(typeof value === 'string'){
+        return value.trim().toLowerCase() === 'yes' || value.trim().toLowerCase() === 'true';
+      }
+      return !!value;
+    }
+
     function isReminderDone(i){
       if(typeof i === 'string') return false;
       const key = reminderKey(i.title, i.listName, i.dueDate);
       const localState = getLocalReminderState();
-      return key in localState ? localState[key] : !!i.isCompleted;
+      return key in localState ? localState[key] : feedIsCompleted(i.isCompleted);
     }
 
     function reminderSort(a, b){
@@ -143,7 +153,7 @@
         .replace(/'/g, '&#39;');
     }
 
-        function jsString(value){
+    function jsString(value){
       const json = JSON.stringify(value === undefined || value === null ? '' : String(value));
       return json.replace(/"/g, '&quot;');
     }
@@ -159,7 +169,7 @@
 
       const key = reminderKey(i.title, i.listName, i.dueDate);
       const localState = getLocalReminderState();
-      const isDone = key in localState ? localState[key] : !!i.isCompleted;
+      const isDone = key in localState ? localState[key] : feedIsCompleted(i.isCompleted);
 
       return `<div style="padding:6px 0; font-size:14px; display:flex; align-items:center; gap:8px; opacity:${isDone ? '0.4' : '1'};">
         <input type="checkbox" style="accent-color: #6b5b95;" ${isDone ? 'checked' : ''} onclick="toggleReminder(${t}, ${l}, ${d}, this)">
@@ -226,11 +236,10 @@
         return `<div style="padding:6px 0; font-size:14px;">${titleAndDate}${dot}</div>`;
       },
       'Nog geen agenda-items binnengekomen.',
-      'Deze widget vult zich zodra de Shortcuts -koppeling met Apple Agenda actief is.'
+      'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Agenda actief is.'
     );
   })();
 </script>
 
 </body>
 </html>
- 
