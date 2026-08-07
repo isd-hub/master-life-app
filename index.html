@@ -75,7 +75,7 @@
         const snap = await getDoc(doc(db, 'feeds', docId));
         if(!snap.exists() || !(snap.data().items||[]).length){
           card.innerHTML = `<div class="empty-state"><b>${emptyLabel}</b><br>${howToLabel}</div>`;
-          if(typeof onItems === 'function') onItems([]);
+          if(typeof onItems === 'function') onItems([], snap.exists() ? snap.data().updatedAt : null);
           return;
         }
         let items = snap.data().items;
@@ -83,7 +83,7 @@
           items = items.slice().sort(sortFn);
         }
         card.innerHTML = items.slice(0,5).map(renderItem).join('');
-        if(typeof onItems === 'function') onItems(items);
+        if(typeof onItems === 'function') onItems(items, snap.data().updatedAt);
       }catch(e){
         card.innerHTML = `<div class="empty-state" style="color:#B5502E;"><b>Fout bij ophalen:</b><br>${e.message}</div>`;
       }
@@ -108,9 +108,11 @@
       }
     }
 
+    // Slaat nu {value, ts} op per reminder, zodat we later kunnen bepalen
+    // of een klik op de site nog "vers" is, of dat de feed inmiddels nieuwer is.
     function setLocalReminderState(key, isCompleted){
       const items = getLocalReminderState();
-      items[key] = isCompleted;
+      items[key] = { value: isCompleted, ts: Date.now() };
       localStorage.setItem('remindersLocalState', JSON.stringify({
         day: getTodayKey(),
         items
@@ -121,9 +123,6 @@
       return `${title}|||${listName}|||${dueDate}`;
     }
 
-    // NIEUW: de shortcut stuurt isCompleted als tekst ("Yes"/"No"), niet als true/false.
-    // Deze functie interpreteert dat correct, en blijft ook werken als het ooit
-    // wel een echte boolean wordt.
     function feedIsCompleted(value){
       if(typeof value === 'string'){
         return value.trim().toLowerCase() === 'yes' || value.trim().toLowerCase() === 'true';
@@ -131,11 +130,29 @@
       return !!value;
     }
 
+    // Tijdstip van de laatste feed-sync, bijgehouden zodra loadFeed 'm doorgeeft.
+    let remindersFeedUpdatedAt = null;
+    function feedUpdatedAtMs(){
+      return remindersFeedUpdatedAt ? new Date(remindersFeedUpdatedAt).getTime() : 0;
+    }
+
+    // Kernlogica: een lokale klik wint alleen zolang de feed nog niet ná die klik
+    // is bijgewerkt. Zodra de shortcut ná je klik heeft gesynchroniseerd, is de
+    // feed weer leidend — zo blijft een reminder die je in de Reminders-app zelf
+    // afvinkt niet "vastzitten" op een oude site-klik van eerder die dag.
     function isReminderDone(i){
       if(typeof i === 'string') return false;
       const key = reminderKey(i.title, i.listName, i.dueDate);
       const localState = getLocalReminderState();
-      return key in localState ? localState[key] : feedIsCompleted(i.isCompleted);
+      const localEntry = localState[key];
+      if(localEntry){
+        const feedTime = feedUpdatedAtMs();
+        if(feedTime && feedTime > localEntry.ts){
+          return feedIsCompleted(i.isCompleted);
+        }
+        return localEntry.value;
+      }
+      return feedIsCompleted(i.isCompleted);
     }
 
     function reminderSort(a, b){
@@ -167,9 +184,7 @@
       const d = jsString(i.dueDate || '');
       const titleText = escapeHtml(i.title || '');
 
-      const key = reminderKey(i.title, i.listName, i.dueDate);
-      const localState = getLocalReminderState();
-      const isDone = key in localState ? localState[key] : feedIsCompleted(i.isCompleted);
+      const isDone = isReminderDone(i);
 
       return `<div style="padding:6px 0; font-size:14px; display:flex; align-items:center; gap:8px; opacity:${isDone ? '0.4' : '1'};">
         <input type="checkbox" style="accent-color: #6b5b95;" ${isDone ? 'checked' : ''} onclick="toggleReminder(${t}, ${l}, ${d}, this)">
@@ -212,7 +227,7 @@
       'Nog geen reminders binnengekomen.',
       'Deze widget vult zich zodra de Shortcuts-koppeling met Apple Reminders actief is.',
       reminderSort,
-      (items) => { remindersItemsCache = items; }
+      (items, updatedAt) => { remindersItemsCache = items; remindersFeedUpdatedAt = updatedAt; }
     );
 
     const calendarColorMap = { 'Privé': '#C77B93', 'Pat & Ira': '#4C7A5D' };
